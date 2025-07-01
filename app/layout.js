@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Poppins } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -11,11 +11,11 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-const poppins = Poppins({
-  variable: "--font-poppins",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
-});
+// const poppins = Poppins({
+//   variable: "--font-poppins",
+//   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+//   subsets: ["latin"],
+// });
 
 export const metadata = {
   title: "Lets Learn - Best learning platform for youth!",
@@ -29,8 +29,8 @@ export default function RootLayout({ children }) {
         className={cn(
           geistSans.variable,
           geistMono.variable,
-          "antialiased",
-          poppins.variable
+          "antialiased"
+          // poppins.variable
         )}
       >
         {children}
