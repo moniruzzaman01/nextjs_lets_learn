@@ -10,7 +10,7 @@ export function SiteFooter({ className }) {
           <p className="text-center text-sm leading-loose md:text-left">
             Built by{" "}
             <a
-              href="#"
+              href="https://ui.shadcn.com/"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
             >
@@ -36,7 +36,7 @@ export function SiteFooter({ className }) {
             </a>
             . The source code is available on{" "}
             <a
-              href="#"
+              href="https://github.com/moniruzzaman01/nextjs_lets_learn.git"
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"

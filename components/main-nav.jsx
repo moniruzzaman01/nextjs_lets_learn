@@ -3,13 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-
 import { MobileNav } from "@/components/mobile-nav";
-import lwsLogo from "@/assets/next.svg";
-import Image from "next/image";
-import { X } from "lucide-react";
 import { Button, buttonVariants } from "./ui/button";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Logo } from "./logo";
+
 export function MainNav({ items, children }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
@@ -24,7 +22,7 @@ export function MainNav({ items, children }) {
     <>
       <div className="flex gap-6 lg:gap-10">
         <Link href="/">
-          <Image className="max-w-[100px]" src={lwsLogo} alt="Logo" />
+          <Logo />
         </Link>
         {items?.length ? (
           <nav className="hidden gap-6 lg:flex">
