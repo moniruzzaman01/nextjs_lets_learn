@@ -18,12 +18,16 @@ const moduleSchema = new Schema({
     type: String,
   },
   course: {
-    required: true,
-    type: String,
+    ref: "Course",
+    type: Schema.ObjectId,
   },
   lessonIds: {
+    ref: "Lesson",
+    type: [Schema.ObjectId],
+  },
+  duration: {
     required: true,
-    type: [String],
+    type: Number,
   },
 });
 

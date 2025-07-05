@@ -18,9 +18,6 @@ const CourseDetailsPage = async ({ params }) => {
         <Testimonial testimonials={replaceMongoIdInArray(testimonials)} />
       )}
       <RelatedCourses />
-      {/* Authors */}
-      {/* https://avatars.githubusercontent.com/u/1416832?v=4 */}
-      {/* https://avatars.githubusercontent.com/u/3633137?v=4 */}
     </>
   );
 };
