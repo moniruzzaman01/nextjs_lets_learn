@@ -1,7 +1,10 @@
+import { getCoursesByInstructorId } from "@/queries/course-queries";
 import { MessageSquare, Presentation, Star, UsersRound } from "lucide-react";
 
-export default function Instructor({ instructor }) {
-  console.log(instructor);
+export default async function Instructor({ instructor }) {
+  const { courses, studentLearned, reviews, avgRatings } =
+    (await getCoursesByInstructorId(instructor?._id)) || {};
+
   return (
     <div className="bg-gray-50 rounded-md p-8">
       <div className="md:flex md:gap-x-5 mb-8">
@@ -23,19 +26,19 @@ export default function Instructor({ instructor }) {
             <ul className="list space-y-4">
               <li className="flex items-center space-x-3">
                 <Presentation className="text-gray-600" />
-                <div>10+ Courses</div>
+                <div>{courses} Courses</div>
               </li>
               <li className="flex space-x-3">
                 <UsersRound className="text-gray-600" />
-                <div>2k+ Student Learned</div>
+                <div>{studentLearned} Students Learned</div>
               </li>
               <li className="flex space-x-3">
                 <MessageSquare className="text-gray-600" />
-                <div>1500+ Reviews</div>
+                <div>{reviews} Reviews</div>
               </li>
               <li className="flex space-x-3">
                 <Star className="text-gray-600" />
-                <div>4.9 Average Rating</div>
+                <div>{avgRatings} Average Rating</div>
               </li>
             </ul>
           </div>
