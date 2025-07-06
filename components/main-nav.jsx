@@ -14,7 +14,7 @@ import {
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Logo } from "./logo";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export function MainNav({ items, children }) {
   const session = useSession();
@@ -103,7 +103,9 @@ export function MainNav({ items, children }) {
                   <Link href="">Testimonials & Certificates</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer" asChild>
-                  <Link href="">Logout</Link>
+                  <Link href="#" onClick={signOut}>
+                    Logout
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
