@@ -59,11 +59,16 @@ export function MainNav({ items, children }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 mt-4">
-              <DropdownMenuItem className="cursor-pointer">
-                <Link href="">Student</Link>
+              {/* <Link href="/register/student">
+                <DropdownMenuItem className="cursor-pointer">
+                  Student
+                </DropdownMenuItem>
+              </Link> */}
+              <DropdownMenuItem className="cursor-pointer" asChild>
+                <Link href="/register/student">Student</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
-                <Link href="">Instructor</Link>
+              <DropdownMenuItem className="cursor-pointer" asChild>
+                <Link href="/register/instructor">Instructor</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
