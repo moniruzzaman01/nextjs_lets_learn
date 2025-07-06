@@ -1,5 +1,6 @@
 import { getCoursesByInstructorId } from "@/queries/course-queries";
 import { MessageSquare, Presentation, Star, UsersRound } from "lucide-react";
+import Image from "next/image";
 
 export default async function Instructor({ instructor }) {
   const { courses, studentLearned, reviews, avgRatings } =
@@ -9,10 +10,12 @@ export default async function Instructor({ instructor }) {
     <div className="bg-gray-50 rounded-md p-8">
       <div className="md:flex md:gap-x-5 mb-8">
         <div className="h-[310px] w-[270px] max-w-full  flex-none rounded mb-5 md:mb-0">
-          <img
+          <Image
             src={instructor?.profilePicture}
             alt=""
             className="w-full h-full object-cover rounded"
+            height={150}
+            width={150}
           />
         </div>
         <div className="flex-1">
