@@ -12,7 +12,16 @@ export const POST = async (req) => {
     password: hashedPass,
     role: userRole,
   };
-
+  const isExist = await User.findOne({ email }).lean();
+  if (isExist) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "User already exist!",
+      },
+      { status: 409 }
+    );
+  }
   try {
     await User.create(userData);
     return NextResponse.json(
