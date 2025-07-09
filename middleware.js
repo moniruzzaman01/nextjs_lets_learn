@@ -7,9 +7,12 @@ const { auth } = NextAuth(authConfig);
 export default auth(async (req) => {
   const { nextUrl, auth } = req;
   const isAuthenticate = !!auth;
+
   const isPublicRoute =
     PUBLIC_ROUTES.find((item) => nextUrl?.pathname?.startsWith(item)) ||
     nextUrl?.pathname === ROOT;
+  console.log("------nexturl", nextUrl.pathname);
+  console.log("------ispublic", isPublicRoute);
 
   if (!isAuthenticate && !isPublicRoute) {
     return Response.redirect(new URL("/login", nextUrl));

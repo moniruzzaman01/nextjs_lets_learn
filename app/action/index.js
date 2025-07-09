@@ -14,3 +14,7 @@ export const ManualLogin = async (formData) => {
     throw new Error(error);
   }
 };
+export const socialLogin = async (formData) => {
+  const action = formData.get("action");
+  await signIn(action, { redirectTo: "/" });
+};

@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { User } from "./models/user-model";
 import bcrypt from "bcrypt";
 import authConfig from "./auth.config.js"; // make sure this is .js
+import google from "next-auth/providers/google";
 
 export const {
   handlers: { GET, POST },
@@ -12,6 +13,17 @@ export const {
 } = NextAuth({
   ...authConfig,
   providers: [
+    google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
     Credentials({
       credentials: {
         email: {},
