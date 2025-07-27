@@ -8,11 +8,11 @@ import { replaceMongoIdInArray } from "@/lib/convertData";
 const CourseDetailsPage = async ({ params }) => {
   const { courseId } = await params;
   const course = await getACourse(courseId);
-  const { title, subtitle, thumbnail, testimonials } = course || {};
+  const { title, subtitle, thumbnail, testimonials, id, price } = course || {};
 
   return (
     <>
-      <Intro title={title} subtitle={subtitle} thumbnail={thumbnail} />
+      <Intro course={{ title, id, price, subtitle, thumbnail }} />
       <Details course={course} />
       {testimonials && (
         <Testimonial testimonials={replaceMongoIdInArray(testimonials)} />

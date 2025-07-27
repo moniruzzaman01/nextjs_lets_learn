@@ -2,8 +2,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import EnrollNow from "@/components/enroll_now";
 
-export default function Intro({ title, subtitle, thumbnail }) {
+export default function Intro({ course }) {
+  const { title, subtitle, thumbnail, id, price } = course || {};
+
   return (
     <div className="overflow-x-hidden  grainy">
       <section className="pt-12  sm:pt-16">
@@ -21,9 +24,7 @@ export default function Intro({ title, subtitle, thumbnail }) {
               </p>
 
               <div className="mt-6 flex items-center justify-center flex-wrap gap-3">
-                <Link href="#" className={cn(buttonVariants({ size: "lg" }))}>
-                  Enroll Now
-                </Link>
+                <EnrollNow isButton={true} course={{ title, id, price }} />
                 <Link
                   href="#"
                   className={cn(
