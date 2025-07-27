@@ -9,10 +9,8 @@ export default auth(async (req) => {
   const isAuthenticate = !!auth;
 
   const isPublicRoute =
-    PUBLIC_ROUTES.find((item) => nextUrl?.pathname?.startsWith(item)) ||
+    PUBLIC_ROUTES.find((item) => item === nextUrl?.pathname) ||
     nextUrl?.pathname === ROOT;
-  console.log("------nexturl", nextUrl.pathname);
-  console.log("------ispublic", isPublicRoute);
 
   if (!isAuthenticate && !isPublicRoute) {
     return Response.redirect(new URL("/login", nextUrl));
