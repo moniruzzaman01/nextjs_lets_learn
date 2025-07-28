@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
+import { sendEmails } from "@/lib/sendEmails";
 import { stripe } from "@/lib/stripe.config";
 import { getACourse } from "@/queries/course-queries";
 import { addEnrollment } from "@/queries/enrollment-queries";
@@ -17,9 +18,7 @@ const SuccessPayment = async ({ searchParams }) => {
   if (!session_id) {
     throw new Error("Please provide a valid session_id (`cs_test_...`)");
   }
-  const course = await getACourse(courseId);
-  const student = await getAUserByEmail(userSession?.user?.email);
-  const studentName = `${student?.firstName} ${student?.lastName}`;
+  //retrieve checkout session response
   const {
     customer_details: { email: payerEmail, name: payerName },
     payment_intent: {
@@ -31,6 +30,15 @@ const SuccessPayment = async ({ searchParams }) => {
   } = await stripe.checkout.sessions.retrieve(session_id, {
     expand: ["line_items", "payment_intent"],
   });
+  //get user and course data from the db
+  const course = await getACourse(courseId);
+  const student = await getAUserByEmail(userSession?.user?.email);
+
+  //store user and course info in variable for use
+  const courseTitle = course?.title;
+  const studentName = `${student?.firstName} ${student?.lastName}`;
+  const studentEmail = student?.email;
+  const instructor = `${course?.instructor?.firstName} ${course?.instructor?.lastName}`;
 
   if (paymentStatus == "succeeded") {
     //store data to the enrolment db
@@ -40,7 +48,16 @@ const SuccessPayment = async ({ searchParams }) => {
       transactionId,
       payment_method_types[0]
     );
-    console.log(res);
+
+    if (res.success) {
+      //send emails to the student and instructor
+      const emailResponse = await sendEmails({
+        studentName,
+        studentEmail,
+        courseTitle,
+        instructor,
+      });
+    }
   }
 
   return (
@@ -51,7 +68,7 @@ const SuccessPayment = async ({ searchParams }) => {
             <CircleCheck className="w-32 h-32 bg-success rounded-full p-0 text-green-500" />
             <h1 className="text-xl md:text-2xl lg:text-3xl">
               Congratulations! <b>{studentName}</b> Your Enrollment is
-              Successful for the course <b>{course?.title}</b>
+              Successful for the course <b>{courseTitle}</b>
             </h1>
           </>
         ) : (
@@ -59,7 +76,7 @@ const SuccessPayment = async ({ searchParams }) => {
             <CircleX className="w-32 h-32 bg-success rounded-full p-0 text-red-500" />
             <h1 className="text-xl md:text-2xl lg:text-3xl">
               OPS! <b>{studentName}</b> Your Enrollment is Failed for the course{" "}
-              <b>{course?.title}</b>
+              <b>{courseTitle}</b>
             </h1>
           </>
         )}
