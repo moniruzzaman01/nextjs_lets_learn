@@ -21,8 +21,8 @@ export const addEnrollment = async (
   // return enrollmentData;
   const isExist = await Enrollment.findOne({ transactionId });
   if (!isExist) {
-    const response = await Enrollment.create(enrollmentData);
-    return { ...response, success: true };
+    await Enrollment.create(enrollmentData);
+    return { success: true };
   } else {
     return { success: false, message: "Invalid/Duplicate tnxId!!!" };
   }

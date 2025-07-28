@@ -38,25 +38,45 @@ const SuccessPayment = async ({ searchParams }) => {
   const courseTitle = course?.title;
   const studentName = `${student?.firstName} ${student?.lastName}`;
   const studentEmail = student?.email;
-  const instructor = `${course?.instructor?.firstName} ${course?.instructor?.lastName}`;
+  const instructorName = `${course?.instructor?.firstName} ${course?.instructor?.lastName}`;
+  const instructorEmail = "mail.com";
 
   if (paymentStatus == "succeeded") {
     //store data to the enrolment db
-    const res = await addEnrollment(
+    const enrollmentResponse = await addEnrollment(
       student?.id,
       courseId,
       transactionId,
       payment_method_types[0]
     );
-
-    if (res.success) {
-      //send emails to the student and instructor
-      const emailResponse = await sendEmails({
+    // console.log("-----enrollmentResponse", enrollmentResponse);
+    const emailSendingInfo = [
+      {
+        to: studentEmail,
+        subject: `Let's begin! You have confirmed the spot in ${courseTitle}`,
         studentName,
-        studentEmail,
         courseTitle,
-        instructor,
-      });
+        instructorName,
+        startDate: "October 15, 2023 - dummy",
+        courseDuration: "8 weeks - dummy",
+        role: "student",
+      },
+      {
+        to: instructorEmail,
+        subject: `${studentName} Just Joined Your ${courseTitle} Class`,
+        studentName,
+        courseTitle,
+        enrollmentDate: "October 15, 2023 - dummy",
+        totalStudents: `500 - dummy`,
+      },
+    ];
+    if (enrollmentResponse?.success) {
+      //send emails to the student and instructor
+      try {
+        await sendEmails(emailSendingInfo);
+      } catch (error) {
+        throw new Error("Email sending failed!!!");
+      }
     }
   }
 

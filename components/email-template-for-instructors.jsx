@@ -1,9 +1,8 @@
-export default function EnrollmentConfirmationEmail({
+export default function EmailTemplateForInstructor({
   studentName,
-  courseName,
-  instructorName,
-  startDate,
-  courseDuration,
+  courseTitle,
+  enrollmentDate,
+  totalStudents,
   supportEmail = "moniruzzamanshakib04@gmail.com",
 }) {
   return (
@@ -19,7 +18,6 @@ export default function EnrollmentConfirmationEmail({
         color: "#333",
       }}
     >
-      {/* Header */}
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
         <h1
           style={{
@@ -29,12 +27,10 @@ export default function EnrollmentConfirmationEmail({
             marginBottom: "0.5rem",
           }}
         >
-          🎉 Congratulations!
+          🎓 New Student Enrollment
         </h1>
-        <p style={{ color: "#6b7280" }}>Your enrollment has been confirmed</p>
+        <p style={{ color: "#6b7280" }}>Your course is growing!</p>
       </div>
-
-      {/* Main Content */}
       <div
         style={{
           border: "1px solid #e5e7eb",
@@ -55,7 +51,7 @@ export default function EnrollmentConfirmationEmail({
         </h2>
 
         <div>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", marginBottom: "0.75rem" }}>
             <div style={{ width: "33.333333%", color: "#6b7280" }}>
               Student Name:
             </div>
@@ -64,7 +60,7 @@ export default function EnrollmentConfirmationEmail({
             </div>
           </div>
 
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", marginBottom: "0.75rem" }}>
             <div style={{ width: "33.333333%", color: "#6b7280" }}>Course:</div>
             <div
               style={{
@@ -73,40 +69,29 @@ export default function EnrollmentConfirmationEmail({
                 color: "#4f46e5",
               }}
             >
-              {courseName}
+              {courseTitle}
+            </div>
+          </div>
+
+          <div style={{ display: "flex", marginBottom: "0.75rem" }}>
+            <div style={{ width: "33.333333%", color: "#6b7280" }}>
+              Enrollment Date:
+            </div>
+            <div style={{ width: "66.666667%", fontWeight: "500" }}>
+              {enrollmentDate}
             </div>
           </div>
 
           <div style={{ display: "flex" }}>
             <div style={{ width: "33.333333%", color: "#6b7280" }}>
-              Instructor:
+              Total Students:
             </div>
             <div style={{ width: "66.666667%", fontWeight: "500" }}>
-              {instructorName}
-            </div>
-          </div>
-
-          <div style={{ display: "flex" }}>
-            <div style={{ width: "33.333333%", color: "#6b7280" }}>
-              Start Date:
-            </div>
-            <div style={{ width: "66.666667%", fontWeight: "500" }}>
-              {startDate}
-            </div>
-          </div>
-
-          <div style={{ display: "flex" }}>
-            <div style={{ width: "33.333333%", color: "#6b7280" }}>
-              Duration:
-            </div>
-            <div style={{ width: "66.666667%", fontWeight: "500" }}>
-              {courseDuration}
+              {totalStudents}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Next Steps */}
       <div
         style={{
           backgroundColor: "#eef2ff",
@@ -123,7 +108,7 @@ export default function EnrollmentConfirmationEmail({
             marginBottom: "0.75rem",
           }}
         >
-          What's Next?
+          Recommended Actions
         </h3>
         <ol
           style={{
@@ -132,14 +117,12 @@ export default function EnrollmentConfirmationEmail({
             color: "#374151",
           }}
         >
-          <li>Check your dashboard for course materials</li>
-          <li>Join the course community forum</li>
-          <li>Mark your calendar for the start date</li>
-          <li>Prepare any required materials</li>
+          <li>Welcome the student with a personal message</li>
+          <li>Review your course materials for upcoming sessions</li>
+          <li>Check student's profile for any special requirements</li>
+          <li>Update your course progress metrics</li>
         </ol>
       </div>
-
-      {/* CTA Button */}
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
         <a
           href="#"
@@ -153,11 +136,9 @@ export default function EnrollmentConfirmationEmail({
             textDecoration: "none",
           }}
         >
-          Access Your Course
+          Go to Course Dashboard
         </a>
       </div>
-
-      {/* Footer */}
       <div
         style={{
           textAlign: "center",
