@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function PersonalDetails({ loggedInUser }) {
   const [userInfo, setUserInfo] = useState({
@@ -31,8 +32,9 @@ export default function PersonalDetails({ loggedInUser }) {
 
     try {
       await updateAUserByEmail(userInfo);
+      toast.success("Personal Details updated successfully!!!");
     } catch (error) {
-      throw new Error("Profile update failed!");
+      toast.error(error?.message);
     }
   };
 

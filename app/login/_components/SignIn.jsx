@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ManualLogin } from "@/app/action";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SignIn() {
   const router = useRouter();
@@ -28,7 +29,10 @@ export default function SignIn() {
 
     const formData = new FormData(event.currentTarget);
     const response = await ManualLogin(formData);
-    if (response) router.push("/");
+    if (response) {
+      toast.success("Login successful!!!");
+      router.push("/");
+    }
   };
 
   return (

@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { toast } from "sonner";
 
-export default function Contact({ email }) {
+export default function Contact({ loggedInUser }) {
+  const { email, phone, socialMedia } = loggedInUser || {};
   const [contactInfo, setContactInfo] = useState({
-    phone: "",
-    socialMedia: "",
+    phone,
+    socialMedia,
   });
 
   const handleChange = (event) => {
@@ -22,8 +24,9 @@ export default function Contact({ email }) {
     event.preventDefault();
     try {
       await updateContactInfo(email, contactInfo);
+      toast.success("Contact Info updated!!!");
     } catch (error) {
-      throw new Error(error?.message);
+      toast.error(error?.message);
     }
   };
 

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function ResetPassword({ email }) {
   const [passwords, setPasswords] = useState({
@@ -22,8 +23,9 @@ export default function ResetPassword({ email }) {
     event.preventDefault();
     try {
       await updatePassword(email, passwords);
+      toast.success("Password Reseted successfully!!!");
     } catch (error) {
-      throw new Error("Password is not updated!!!");
+      toast.error(error?.message);
     }
   };
   return (

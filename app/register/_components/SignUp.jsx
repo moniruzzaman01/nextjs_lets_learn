@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function SignUp({ role }) {
   const router = useRouter();
@@ -37,10 +38,13 @@ export default function SignUp({ role }) {
       });
 
       if (response.status === 201) {
+        toast.success("Your registration is successful. Please Login!!!");
         router.push("/login");
+      } else if (response.status === 409) {
+        toast.error("User already exists!!!");
       }
     } catch (error) {
-      console.error(error);
+      throw new Error(error?.message);
     }
   };
 
