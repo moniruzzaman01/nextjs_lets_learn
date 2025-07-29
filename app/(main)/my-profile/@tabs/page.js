@@ -21,7 +21,7 @@ async function Profile() {
           {/* contact section */}
           <Contact />
           {/* password change section */}
-          <ResetPassword />
+          <ResetPassword email={user?.email} />
         </div>
       </div>
     </>
