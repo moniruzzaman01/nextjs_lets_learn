@@ -26,3 +26,11 @@ export const updatePassword = async (email, passwords) => {
     throw new Error(error?.message);
   }
 };
+
+export const updateContactInfo = async (email, contactInfo) => {
+  try {
+    await User.findOneAndUpdate({ email }, contactInfo);
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+};
