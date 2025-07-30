@@ -1,8 +1,25 @@
+import { replaceMongoIdInArray } from "@/lib/convertData";
+import { Category } from "@/models/category-model";
+import { Course } from "@/models/course-model";
 import { Enrollment } from "@/models/enrollment-model";
 
 export const getEnrollmentsByCourseId = async (courseId) => {
-  const enrollments = await Enrollment.find({ course_id: courseId }).lean();
-  return enrollments;
+  const enrollments = await Enrollment.find({ course: courseId }).lean();
+  return replaceMongoIdInArray(enrollments);
+};
+
+export const getEnrollmentByStudentId = async (studentId) => {
+  const enrollment = await Enrollment.find({ student: studentId })
+    .populate({
+      path: "course",
+      model: Course,
+      populate: {
+        path: "category",
+        model: Category,
+      },
+    })
+    .lean();
+  return replaceMongoIdInArray(enrollment);
 };
 
 export const addEnrollment = async (

@@ -2,8 +2,8 @@ import mongoose, { Schema } from "mongoose";
 
 const enrollmentSchema = new Schema(
   {
-    course_id: { type: Schema.ObjectId, ref: "Course" },
-    student_id: { type: Schema.ObjectId, ref: "User" },
+    course: { type: Schema.ObjectId, ref: "Course" },
+    student: { type: Schema.ObjectId, ref: "User" },
     method: {
       required: true,
       type: String,
