@@ -27,6 +27,15 @@ export const getEnrollmentByStudentId = async (studentId) => {
   return replaceMongoIdInArray(enrollment);
 };
 
+export const isAlreadyEnrolled = async (course, student) => {
+  try {
+    const result = await Enrollment.findOne({ course, student });
+    return !!result;
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+};
+
 export const addEnrollment = async (student, course, transactionId, method) => {
   const enrollmentData = {
     student,

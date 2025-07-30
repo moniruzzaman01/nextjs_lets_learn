@@ -1,14 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 import { formatPrice } from "@/lib/formatPrice";
 import EnrollNow from "@/components/enroll_now";
+import { auth } from "@/auth";
+import { getAUserByEmail } from "@/queries/user-queries";
+import { isAlreadyEnrolled } from "@/queries/enrollment-queries";
+import { Button } from "@/components/ui/button";
 
-export default function CourseCard({ course }) {
+export default async function CourseCard({ course }) {
+  const { user } = await auth();
+  if (!user) {
+    redirect("/login");
+  }
+
   const { title, id, price } = course || {};
+  const loggedInUser = await getAUserByEmail(user?.email);
+  const isEnrolled = await isAlreadyEnrolled(id, loggedInUser?.id);
+
   return (
-    <Link key={course?.id} href={`/courses/${course?.id}`}>
-      <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
+    <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
+      <Link key={course?.id} href={`/courses/${course?.id}`}>
         <div className="relative w-full aspect-video rounded-md overflow-hidden">
           <Image
             src={course?.thumbnail}
@@ -32,16 +44,24 @@ export default function CourseCard({ course }) {
               <span>{course?.modules?.length} Chapters</span>
             </div>
           </div>
-
-          <div className="flex items-center justify-between mt-4">
-            <p className="text-md md:text-sm font-medium text-slate-700">
-              {formatPrice(course?.price)}
-            </p>
-
-            <EnrollNow course={{ title, id, price }} />
-          </div>
         </div>
+      </Link>
+      <div className="flex items-center justify-between mt-4">
+        <p className="text-md md:text-sm font-medium text-slate-700">
+          {formatPrice(course?.price)}
+        </p>
+        {isEnrolled ? (
+          <Link
+            href="#"
+            className=" flex items-center text-xs text-sky-700 h-7 gap-1 px-4 rounded-md hover:bg-zinc-100 transition-colors duration-200 hover:text-black"
+          >
+            Continue
+            <ArrowRight className="w-3" />
+          </Link>
+        ) : (
+          <EnrollNow course={{ title, id, price }} />
+        )}
       </div>
-    </Link>
+    </div>
   );
 }

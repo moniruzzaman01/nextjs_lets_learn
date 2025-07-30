@@ -3,9 +3,19 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import EnrollNow from "@/components/enroll_now";
+import { isAlreadyEnrolled } from "@/queries/enrollment-queries";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { getAUserByEmail } from "@/queries/user-queries";
 
-export default function Intro({ course }) {
+export default async function Intro({ course }) {
+  const { user } = await auth();
+  if (!user) {
+    redirect("/login");
+  }
   const { title, subtitle, thumbnail, id, price } = course || {};
+  const loggedInUser = await getAUserByEmail(user?.email);
+  const isEnrolled = await isAlreadyEnrolled(id, loggedInUser?.id);
 
   return (
     <div className="overflow-x-hidden  grainy">
@@ -24,7 +34,13 @@ export default function Intro({ course }) {
               </p>
 
               <div className="mt-6 flex items-center justify-center flex-wrap gap-3">
-                <EnrollNow isButton={true} course={{ title, id, price }} />
+                {isEnrolled ? (
+                  <Link href="#" className={cn(buttonVariants({ size: "lg" }))}>
+                    Continue
+                  </Link>
+                ) : (
+                  <EnrollNow isButton={true} course={{ title, id, price }} />
+                )}
                 <Link
                   href="#"
                   className={cn(
