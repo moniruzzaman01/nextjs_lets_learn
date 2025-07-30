@@ -1,18 +1,44 @@
 import { Badge } from "@/components/ui/badge";
+import { getAReport } from "@/queries/report-queries";
 import { BookOpen } from "lucide-react";
 import Image from "next/image";
 
 export default async function EnrolledCourseCard({ enrollment }) {
-  console.log("---enrollment", enrollment);
-
   const {
     course: {
+      _id: courseId,
       title,
       category: { title: categoryTitle },
       thumbnail,
       modules,
     },
+    student: { _id: studentId },
   } = enrollment || {};
+
+  const {
+    // totalCompletedLessons,
+    totalCompletedModules,
+    quizAssessment: { assessments, otherMarks },
+  } = await getAReport({
+    course: courseId,
+    student: studentId,
+  });
+
+  const assessmentData = assessments.reduce(
+    (acc, curr) => {
+      acc.totalQuiz += 1;
+      if (curr.attempted) {
+        acc.quizAttempted += 1;
+
+        if (curr.options.find((item) => item.isCorrect && item.isSelected)) {
+          acc.noOfCorrectQuiz += 1;
+        }
+      }
+
+      return acc;
+    },
+    { totalQuiz: 0, quizAttempted: 0, noOfCorrectQuiz: 0 }
+  );
 
   return (
     <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
@@ -29,25 +55,34 @@ export default async function EnrolledCourseCard({ enrollment }) {
             <div>
               <BookOpen className="w-4" />
             </div>
-            <span>{modules?.length || 0} Chapters</span>
+            <span>{modules?.length} Chapters</span>
           </div>
         </div>
         <div className=" border-b pb-2 mb-2">
           <div className="flex items-center justify-between">
-            <p className="text-md md:text-sm font-medium text-slate-700">
-              Total Modules: {modules?.length || 0}
-            </p>
             <div className="text-md md:text-sm font-medium text-slate-700">
-              Completed Modules <Badge variant="success">05</Badge>
+              Total Modules: <Badge variant="success">{modules?.length}</Badge>
+            </div>
+            <div className="text-md md:text-sm font-medium text-slate-700">
+              Completed Modules:{" "}
+              <Badge variant="success">{totalCompletedModules?.length}</Badge>
             </div>
           </div>
           <div className="flex items-center justify-between mt-2">
-            <p className="text-md md:text-sm font-medium text-slate-700">
-              Total Quizzes: 10
-            </p>
+            <div className="text-md md:text-sm font-medium text-slate-700">
+              Total Quizzes:{" "}
+              <Badge variant="success">{assessmentData.totalQuiz}</Badge>
+            </div>
 
             <div className="text-md md:text-sm font-medium text-slate-700">
-              Quiz taken <Badge variant="success">10</Badge>
+              Quiz Attempted:{" "}
+              <Badge variant="success">{assessmentData.quizAttempted}</Badge>
+            </div>
+          </div>
+          <div className="flex items-center justify-end mt-2 border-b pb-2 mb-2">
+            <div className="text-md md:text-sm font-medium text-slate-700">
+              Correct Quizzes:{" "}
+              <Badge variant="success">{assessmentData.noOfCorrectQuiz}</Badge>
             </div>
           </div>
           <div className="flex items-center justify-between mt-2">
@@ -55,14 +90,19 @@ export default async function EnrolledCourseCard({ enrollment }) {
               Mark from Quizzes
             </p>
 
-            <p className="text-md md:text-sm font-medium text-slate-700">50</p>
+            <p className="text-md md:text-sm font-medium text-slate-700">
+              {`${assessmentData.noOfCorrectQuiz} X 5`} ={" "}
+              {assessmentData.noOfCorrectQuiz * 5}
+            </p>
           </div>
           <div className="flex items-center justify-between mt-2">
             <p className="text-md md:text-sm font-medium text-slate-700">
               Others
             </p>
 
-            <p className="text-md md:text-sm font-medium text-slate-700">50</p>
+            <p className="text-md md:text-sm font-medium text-slate-700">
+              = {otherMarks}
+            </p>
           </div>
         </div>
         <div className="flex items-center justify-between mb-4">
@@ -70,7 +110,9 @@ export default async function EnrolledCourseCard({ enrollment }) {
             Total Marks
           </p>
 
-          <p className="text-md md:text-sm font-medium text-slate-700">100</p>
+          <p className="text-md md:text-sm font-medium text-slate-700">
+            = {assessmentData.noOfCorrectQuiz * 5 + otherMarks}
+          </p>
         </div>
       </div>
     </div>
