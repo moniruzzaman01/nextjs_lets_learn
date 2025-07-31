@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { LogOut } from "lucide-react";
+import { CircleUserRound, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import ProfileMenu from "./ProfileMenu";
 import { auth } from "@/auth";
@@ -32,14 +32,18 @@ export default async function Sidebar() {
             />
             <div>
               <div className="relative size-28 mx-auto">
-                <Image
-                  src={loggedInUser?.profilePicture}
-                  className="rounded-full shadow dark:shadow-gray-800 ring-4 ring-slate-50 dark:ring-slate-800"
-                  id="profile-banner"
-                  alt="profile-image"
-                  width={112}
-                  height={112}
-                />
+                {loggedInUser?.profilePicture ? (
+                  <Image
+                    src={loggedInUser?.profilePicture}
+                    className="rounded-full shadow dark:shadow-gray-800 ring-4 ring-slate-50 dark:ring-slate-800"
+                    id="profile-banner"
+                    alt={loggedInUser?.firstName + " " + loggedInUser?.lastName}
+                    width={112}
+                    height={112}
+                  />
+                ) : (
+                  <CircleUserRound className="w-[112px] h-[112px]" />
+                )}
                 <label
                   className="absolute inset-0 cursor-pointer"
                   htmlFor="pro-img"
