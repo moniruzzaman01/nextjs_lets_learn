@@ -115,6 +115,8 @@ export async function getCoursesByInstructorId(instructorId) {
 }
 
 export async function getCoursesDataByInstructorId(instructorId) {
-  const courses = await Course.find({ instructor: instructorId }).lean();
-  return replaceMongoIdInArray(courses);
+  const courses = await Course.find({ instructor: instructorId })
+    .select("-__v -createdAt -updatedAt")
+    .lean();
+  return replaceMongoIdInArray(JSON.parse(JSON.stringify(courses)));
 }
