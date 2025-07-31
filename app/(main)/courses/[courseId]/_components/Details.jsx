@@ -3,6 +3,7 @@ import Overview from "./Overview";
 import Instructor from "./Instructor";
 import Curriculum from "./Curriculum";
 import Image from "next/image";
+import { CircleUserRound } from "lucide-react";
 
 export default function Details({ course }) {
   const { title, subtitle, instructor, updatedAt, description, learning } =
@@ -20,13 +21,17 @@ export default function Details({ course }) {
         <p className="mt-3 text-gray-600 text-sm">{subtitle}</p>
         <div className="flex sm:items-center gap-5 flex-col sm:flex-row sm:gap-6 md:gap-20 mt-6">
           <div className="flex items-center gap-2">
-            <Image
-              className="w-[40px] h-[40px] rounded-full"
-              src={instructor?.profilePicture}
-              alt="sumit saha"
-              height={40}
-              width={40}
-            />
+            {instructor?.profilePicture ? (
+              <Image
+                alt={instructor?.firstName + " " + instructor?.lastName}
+                className="w-[40px] h-[40px] rounded-full"
+                src={instructor?.profilePicture}
+                height={40}
+                width={40}
+              />
+            ) : (
+              <CircleUserRound className="w-[40px] h-[40px]" />
+            )}
             <p className="font-bold">
               {instructor?.firstName} {instructor?.lastName}
             </p>

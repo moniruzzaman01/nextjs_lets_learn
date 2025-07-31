@@ -6,6 +6,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
 
 export default function Testimonial({ testimonials }) {
@@ -30,13 +31,21 @@ export default function Testimonial({ testimonials }) {
                 <div className="sm:break-inside-avoid">
                   <blockquote className="rounded-lg bg-gray-50 p-6  sm:p-8 shadow-sm">
                     <div className="flex items-center gap-4">
-                      <Image
-                        alt=""
-                        src={testimonial?.user?.profilePicture}
-                        width={40}
-                        height={40}
-                        className="size-14 rounded-full object-cover"
-                      />
+                      {testimonial?.user?.profilePicture ? (
+                        <Image
+                          alt={
+                            testimonial?.user?.firstName +
+                            " " +
+                            testimonial?.user?.lastName
+                          }
+                          src={testimonial?.user?.profilePicture}
+                          width={40}
+                          height={40}
+                          className="size-14 rounded-full object-cover"
+                        />
+                      ) : (
+                        <CircleUserRound className=" size-14" />
+                      )}
                       <div>
                         <p className="mt-0.5 text-lg font-medium text-gray-900">
                           {testimonial?.user?.first_name}{" "}
