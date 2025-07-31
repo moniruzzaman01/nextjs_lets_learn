@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import { User } from "@/models/user-model";
 
 export const POST = async (req) => {
-  throw new Error("ha ha ha!");
   const { firstName, lastName, email, password, userRole } = await req.json();
   const hashedPass = bcrypt.hashSync(password, 5);
   const userData = {
