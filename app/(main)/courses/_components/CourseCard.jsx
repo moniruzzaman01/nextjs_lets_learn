@@ -6,49 +6,40 @@ import EnrollNow from "@/components/enroll_now";
 import { auth } from "@/auth";
 import { getAUserByEmail } from "@/queries/user-queries";
 import { isAlreadyEnrolled } from "@/queries/enrollment-queries";
-import { Button } from "@/components/ui/button";
 
 export default async function CourseCard({ course }) {
-  const { user } = await auth();
-  if (!user) {
-    redirect("/login");
+  const { title, id, price, thumbnail, category, modules } = course || {};
+  const { user } = (await auth()) || {};
+  let loggedInUser, isEnrolled;
+  if (user) {
+    loggedInUser = await getAUserByEmail(user?.email);
+    isEnrolled = await isAlreadyEnrolled(id, loggedInUser?.id);
   }
-
-  const { title, id, price } = course || {};
-  const loggedInUser = await getAUserByEmail(user?.email);
-  const isEnrolled = await isAlreadyEnrolled(id, loggedInUser?.id);
 
   return (
     <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
-      <Link key={course?.id} href={`/courses/${course?.id}`}>
+      <Link key={id} href={`/courses/${id}`}>
         <div className="relative w-full aspect-video rounded-md overflow-hidden">
-          <Image
-            src={course?.thumbnail}
-            alt={"course"}
-            className="object-cover"
-            fill
-          />
+          <Image src={thumbnail} alt={"course"} className="object-cover" fill />
         </div>
         <div className="flex flex-col pt-2">
           <div className="text-lg md:text-base font-medium group-hover:text-sky-700 line-clamp-2">
-            {course?.title}
+            {title}
           </div>
-          <p className="text-xs text-muted-foreground">
-            {course?.category?.title}
-          </p>
+          <p className="text-xs text-muted-foreground">{category?.title}</p>
           <div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
             <div className="flex items-center gap-x-1 text-slate-500">
               <div>
                 <BookOpen className="w-4" />
               </div>
-              <span>{course?.modules?.length} Chapters</span>
+              <span>{modules?.length} Chapters</span>
             </div>
           </div>
         </div>
       </Link>
       <div className="flex items-center justify-between mt-4">
         <p className="text-md md:text-sm font-medium text-slate-700">
-          {formatPrice(course?.price)}
+          {formatPrice(price)}
         </p>
         {isEnrolled ? (
           <Link
