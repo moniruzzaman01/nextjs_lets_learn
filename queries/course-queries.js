@@ -39,6 +39,7 @@ export async function getAllCourses() {
     .lean();
   return replaceMongoIdInArray(courses);
 }
+
 export async function getACourse(courseId) {
   const courses = await Course.findById(courseId)
     .populate({
@@ -64,6 +65,7 @@ export async function getACourse(courseId) {
     .lean();
   return replaceMongoIdInObject(courses);
 }
+
 export async function getCoursesByInstructorId(instructorId) {
   const courses = await Course.find({ instructor: instructorId })
     .populate({
@@ -102,4 +104,9 @@ export async function getCoursesByInstructorId(instructorId) {
     reviews,
     avgRatings: total / length,
   };
+}
+
+export async function getCoursesDataByInstructorId(instructorId) {
+  const courses = await Course.find({ instructor: instructorId }).lean();
+  return replaceMongoIdInArray(courses);
 }
