@@ -76,15 +76,21 @@ export async function getCoursesByInstructorId(instructorId) {
   const enrollments = await Promise.all(
     courses.map(async (course) => await getEnrollmentsByCourseId(course._id))
   );
-  const studentLearned = enrollments.reduce(
-    (acc, curr) => acc + curr?.length,
-    0
+  const { studentLearned, totalRevinue } = enrollments.reduce(
+    (acc, curr) => {
+      if (curr?.length) {
+        const temp = curr?.length * curr[0]?.course?.price;
+        acc.totalRevinue += temp;
+      }
+      acc.studentLearned += curr?.length;
+      return acc;
+    },
+    { studentLearned: 0, totalRevinue: 0 }
   );
   const reviews = courses.reduce(
     (acc, curr) => acc + curr?.testimonials?.length,
     0
   );
-
   const { total, length } =
     courses
       .map((course) => course.testimonials.map((item) => item.rating))
@@ -98,8 +104,10 @@ export async function getCoursesByInstructorId(instructorId) {
         },
         { total: 0, length: 0 }
       ) || {};
+
   return {
     courses: courses?.length || 0,
+    totalRevinue,
     studentLearned,
     reviews,
     avgRatings: total / length,

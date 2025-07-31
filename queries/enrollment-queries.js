@@ -5,7 +5,13 @@ import { Enrollment } from "@/models/enrollment-model";
 import { User } from "@/models/user-model";
 
 export const getEnrollmentsByCourseId = async (courseId) => {
-  const enrollments = await Enrollment.find({ course: courseId }).lean();
+  const enrollments = await Enrollment.find({ course: courseId })
+    .populate({
+      path: "course",
+      model: Course,
+      select: "price",
+    })
+    .lean();
   return replaceMongoIdInArray(enrollments);
 };
 
