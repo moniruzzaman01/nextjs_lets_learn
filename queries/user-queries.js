@@ -7,6 +7,11 @@ export const getAUserByEmail = async (email) => {
   return user ? replaceMongoIdInObject(user) : user;
 };
 
+export const getAUserById = async (id) => {
+  const user = await User.findById(id).select("-password -__v").lean();
+  return user ? replaceMongoIdInObject(user) : user;
+};
+
 export const validateCurrentPassword = async (email, password) => {
   const user = await User.findOne({ email }).select("password").lean();
   const isMatch = bcrypt.compareSync(password, user?.password);

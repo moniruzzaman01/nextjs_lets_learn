@@ -2,25 +2,23 @@ import { SectionTitle } from "@/components/section-title";
 import InstructorInfo from "./_components/InstructorInfo";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { getAUserByEmail } from "@/queries/user-queries";
+import { getAUserById } from "@/queries/user-queries";
 import { getCoursesDataByInstructorId } from "@/queries/course-queries";
 import CourseCard from "./_components/CourseCard";
-export default async function InstructorProfile() {
+export default async function InstructorProfile({ searchParams }) {
+  const { id: instructorId } = await searchParams;
   const { user } = await auth();
   if (!user) {
     redirect("/login");
   }
-  const loggedInUser = await getAUserByEmail(user?.email);
-  if (loggedInUser?.role != "instructor") {
-    redirect("/forbidden-page");
-  }
-  const courses = await getCoursesDataByInstructorId(loggedInUser?.id);
+  const instructor = await getAUserById(instructorId);
+  const courses = await getCoursesDataByInstructorId(instructorId);
 
   return (
     <section id="categories" className="space-y-6  py-6  lg:py-12">
       <div className="container grid grid-cols-12 lg:gap-x-8 gap-y-8">
         {/* Instructor Info */}
-        <InstructorInfo loggedInUser={loggedInUser} />
+        <InstructorInfo instructor={instructor} />
         {/* Courses */}
         <div className="col-span-12 lg:col-span-8">
           <div>

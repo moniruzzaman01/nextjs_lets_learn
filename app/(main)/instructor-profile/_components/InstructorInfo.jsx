@@ -7,9 +7,9 @@ import {
   UsersRound,
 } from "lucide-react";
 
-export default async function InstructorInfo({ loggedInUser }) {
+export default async function InstructorInfo({ instructor }) {
   const { firstName, lastName, designation, bio, id, profilePicture } =
-    loggedInUser || {};
+    instructor || {};
   const { avgRatings, courses, reviews, studentLearned } =
     await getCoursesByInstructorId(id);
 

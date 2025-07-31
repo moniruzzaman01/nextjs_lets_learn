@@ -2,11 +2,13 @@ import { getCoursesByInstructorId } from "@/queries/course-queries";
 import {
   MessageSquare,
   Presentation,
+  ScanEye,
   SquareUserRound,
   Star,
   UsersRound,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function Instructor({ instructor }) {
   const { firstName, lastName, id, profilePicture, role, bio } =
@@ -32,8 +34,14 @@ export default async function Instructor({ instructor }) {
         </div>
         <div className="flex-1">
           <div className="max-w-[300px]">
-            <h4 className="text-[34px] font-bold leading-[51px]">
-              {firstName + " " + lastName}
+            <h4 className="text-[34px] font-bold leading-[51px] flex items-center gap-2">
+              {firstName + " " + lastName}{" "}
+              <Link
+                href={`/instructor-profile?id=${instructor?._id}`}
+                className=" bg-white border border-1 p-1 rounded-md  hover:bg-zinc-100 transition-colors duration-200 hover:text-black"
+              >
+                <ScanEye className="w-10" />
+              </Link>
             </h4>
             <div className="text-gray-600 font-medium mb-6">{role}</div>
             <ul className="list space-y-4">
