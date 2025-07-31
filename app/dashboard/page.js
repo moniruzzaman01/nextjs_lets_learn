@@ -12,11 +12,6 @@ export default async function DashboardPage() {
   if (loggedInUser?.role != "instructor") redirect("/forbidden-page");
   const { courses, totalRevinue, studentLearned, reviews, avgRatings } =
     await getCoursesByInstructorId(loggedInUser?.id);
-  //   courses: courses?.length || 0,
-  // totalRevinue,
-  // studentLearned,
-  // reviews,
-  // avgRatings: total / length,
 
   return (
     <div className="p-6">
