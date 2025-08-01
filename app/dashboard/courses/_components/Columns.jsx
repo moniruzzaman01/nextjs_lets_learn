@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { formatPrice } from "@/lib/formatPrice";
 import { cn } from "@/lib/utils";
 import { GraduationCap } from "lucide-react";
 import { Star } from "lucide-react";
@@ -41,12 +42,8 @@ export const columns = [
       );
     },
     cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price") || "0");
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(price);
-      return <div>{formatted}</div>;
+      const price = row.getValue("price");
+      return <div>{formatPrice(price)}</div>;
     },
   },
   {
@@ -73,6 +70,7 @@ export const columns = [
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
       const { id } = row.original;
       return (
