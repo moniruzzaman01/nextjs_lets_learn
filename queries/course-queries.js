@@ -93,8 +93,9 @@ export async function getCoursesByInstructorId(instructorId) {
   );
   const { total, length } =
     courses
-      .map((course) => course.testimonials.map((item) => item.rating))
+      .map((course) => course.testimonials)
       .flat()
+      .map((item) => item.ratings)
       .reduce(
         (acc, curr) => {
           acc.total += curr;
@@ -110,7 +111,7 @@ export async function getCoursesByInstructorId(instructorId) {
     totalRevinue,
     studentLearned,
     reviews,
-    avgRatings: total / length,
+    avgRatings: reviews && (total / length).toFixed(2),
   };
 }
 
