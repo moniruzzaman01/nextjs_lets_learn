@@ -92,8 +92,7 @@ export const getEnrollmentStat = async (filter) => {
         enrollment["progress"] =
           (report?.totalCompletedModules?.length /
             enrollment?.course?.modules?.length) *
-            100 +
-          "%";
+          100;
       } else {
         enrollment["quizMarks"] = "-";
         enrollment["progress"] = "-";

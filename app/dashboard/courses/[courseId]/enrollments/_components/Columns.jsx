@@ -56,6 +56,7 @@ export const columns = [
         </Button>
       );
     },
+    cell: ({ row }) => `${row.getValue("progress")}%`,
   },
   {
     accessorKey: "enrollment_date",
@@ -68,6 +69,20 @@ export const columns = [
           Enroll Date <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      const date = row.getValue("enrollment_date");
+      let options = {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+        new Date(date)
+      );
+      return formattedDate;
     },
   },
 ];
