@@ -1,24 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { MobileNav } from "@/components/mobile-nav";
 import { Button, buttonVariants } from "./ui/button";
-import { Menu, X } from "lucide-react";
+import { CircleUserRound, Menu, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Logo } from "./logo";
 import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 
 export function MainNav({ items, children }) {
   const session = useSession();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/me");
+      const data = await res.json();
+      setLoggedInUser(data);
+    })();
+  }, []);
 
   return (
     <>
@@ -65,11 +74,6 @@ export function MainNav({ items, children }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 mt-4">
-                  {/* <Link href="/register/student">
-                <DropdownMenuItem className="cursor-pointer">
-                  Student
-                </DropdownMenuItem>
-              </Link> */}
                   <DropdownMenuItem className="cursor-pointer" asChild>
                     <Link href="/register/student">Student</Link>
                   </DropdownMenuItem>
@@ -83,19 +87,30 @@ export function MainNav({ items, children }) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className="cursor-pointer">
-                  <Avatar>
-                    <AvatarImage
-                      src="https://github.com/shadcn.png"
-                      alt="@shadcn"
+                  {loggedInUser?.profilePicture ? (
+                    <Image
+                      alt={
+                        loggedInUser?.firstName + " " + loggedInUser?.lastName
+                      }
+                      className="w-[40px] h-[40px] rounded-full border border-black"
+                      src={loggedInUser?.profilePicture}
+                      height={40}
+                      width={40}
                     />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+                  ) : (
+                    <CircleUserRound className="w-[40px] h-[40px]" />
+                  )}
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 mt-4">
                 <DropdownMenuItem className="cursor-pointer" asChild>
                   <Link href="/my-profile">Profile</Link>
                 </DropdownMenuItem>
+                {loggedInUser?.role == "instructor" && (
+                  <DropdownMenuItem className="cursor-pointer" asChild>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem className="cursor-pointer" asChild>
                   <Link href="/my-profile/enrolled-courses">My Courses</Link>
                 </DropdownMenuItem>

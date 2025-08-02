@@ -6,12 +6,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import MobileSidebar from "./MobileSidebar";
 import { signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { CircleUserRound } from "lucide-react";
+import Image from "next/image";
 
 export default function Navbar() {
+  const [loggedInUser, setLoggedInUser] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/me");
+      const data = await res.json();
+      setLoggedInUser(data);
+    })();
+  }, []);
+
   return (
     <div className="p-4 border-b h-full flex items-center bg-white shadow-sm">
       <MobileSidebar />
@@ -19,13 +31,17 @@ export default function Navbar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="cursor-pointer">
-              <Avatar>
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
+              {loggedInUser?.profilePicture ? (
+                <Image
+                  alt={loggedInUser?.firstName + " " + loggedInUser?.lastName}
+                  className="w-[40px] h-[40px] rounded-full border border-black"
+                  src={loggedInUser?.profilePicture}
+                  height={40}
+                  width={40}
                 />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+              ) : (
+                <CircleUserRound className="w-[40px] h-[40px]" />
+              )}
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 mt-4">
