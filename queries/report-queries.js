@@ -9,5 +9,26 @@ export const getAReport = async (query) => {
       model: Assessment,
     })
     .lean();
-  return report ? replaceMongoIdInObject(report) : report;
+  const assessmentData = report?.quizAssessment?.assessments.reduce(
+    (acc, curr) => {
+      acc.totalQuiz += 1;
+      if (curr.attempted) {
+        acc.quizAttempted += 1;
+
+        if (curr.options.find((item) => item.isCorrect && item.isSelected)) {
+          acc.noOfCorrectQuiz += 1;
+        }
+      }
+
+      return acc;
+    },
+    { totalQuiz: 0, quizAttempted: 0, noOfCorrectQuiz: 0 }
+  );
+  if (report) {
+    report["totalQuiz"] = assessmentData?.totalQuiz;
+    report["quizAttempted"] = assessmentData?.quizAttempted;
+    report["noOfCorrectQuiz"] = assessmentData?.noOfCorrectQuiz;
+  }
+
+  return report ? replaceMongoIdInObject(report) : {};
 };

@@ -18,28 +18,14 @@ export default async function EnrolledCourseCard({ enrollment }) {
   const {
     // totalCompletedLessons,
     totalCompletedModules,
-    quizAssessment: { assessments, otherMarks } = {},
-  } =
-    (await getAReport({
-      course: courseId,
-      student: studentId,
-    })) || {};
-
-  const assessmentData = assessments?.reduce(
-    (acc, curr) => {
-      acc.totalQuiz += 1;
-      if (curr.attempted) {
-        acc.quizAttempted += 1;
-
-        if (curr.options.find((item) => item.isCorrect && item.isSelected)) {
-          acc.noOfCorrectQuiz += 1;
-        }
-      }
-
-      return acc;
-    },
-    { totalQuiz: 0, quizAttempted: 0, noOfCorrectQuiz: 0 }
-  );
+    quizAssessment: { otherMarks } = {},
+    totalQuiz,
+    quizAttempted,
+    noOfCorrectQuiz,
+  } = (await getAReport({
+    course: courseId,
+    student: studentId,
+  })) || {};
 
   return (
     <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
@@ -66,24 +52,25 @@ export default async function EnrolledCourseCard({ enrollment }) {
             </div>
             <div className="text-md md:text-sm font-medium text-slate-700">
               Completed Modules:{" "}
-              <Badge variant="success">{totalCompletedModules?.length}</Badge>
+              <Badge variant="success">
+                {totalCompletedModules?.length || "-"}
+              </Badge>
             </div>
           </div>
           <div className="flex items-center justify-between mt-2">
             <div className="text-md md:text-sm font-medium text-slate-700">
-              Total Quizzes:{" "}
-              <Badge variant="success">{assessmentData?.totalQuiz}</Badge>
+              Total Quizzes: <Badge variant="success">{totalQuiz || "-"}</Badge>
             </div>
 
             <div className="text-md md:text-sm font-medium text-slate-700">
               Quiz Attempted:{" "}
-              <Badge variant="success">{assessmentData?.quizAttempted}</Badge>
+              <Badge variant="success">{quizAttempted || "-"}</Badge>
             </div>
           </div>
           <div className="flex items-center justify-end mt-2 border-b pb-2 mb-2">
             <div className="text-md md:text-sm font-medium text-slate-700">
               Correct Quizzes:{" "}
-              <Badge variant="success">{assessmentData?.noOfCorrectQuiz}</Badge>
+              <Badge variant="success">{noOfCorrectQuiz || "-"}</Badge>
             </div>
           </div>
           <div className="flex items-center justify-between mt-2">
@@ -92,8 +79,9 @@ export default async function EnrolledCourseCard({ enrollment }) {
             </p>
 
             <p className="text-md md:text-sm font-medium text-slate-700">
-              {`${assessmentData?.noOfCorrectQuiz} X 5`} ={" "}
-              {assessmentData?.noOfCorrectQuiz * 5}
+              {noOfCorrectQuiz
+                ? noOfCorrectQuiz + " X 5 = " + noOfCorrectQuiz * 5
+                : "-"}
             </p>
           </div>
           <div className="flex items-center justify-between mt-2">
@@ -102,7 +90,7 @@ export default async function EnrolledCourseCard({ enrollment }) {
             </p>
 
             <p className="text-md md:text-sm font-medium text-slate-700">
-              = {otherMarks}
+              {otherMarks ? "= " + otherMarks : "-"}
             </p>
           </div>
         </div>
@@ -112,7 +100,9 @@ export default async function EnrolledCourseCard({ enrollment }) {
           </p>
 
           <p className="text-md md:text-sm font-medium text-slate-700">
-            = {assessmentData?.noOfCorrectQuiz * 5 + otherMarks}
+            {noOfCorrectQuiz && otherMarks
+              ? "= " + (noOfCorrectQuiz * 5 + otherMarks)
+              : "-"}
           </p>
         </div>
       </div>
