@@ -7,7 +7,6 @@ const courseSchema = new Schema(
       type: String,
     },
     subtitle: {
-      required: true,
       type: String,
     },
     description: {
@@ -15,17 +14,13 @@ const courseSchema = new Schema(
       type: String,
     },
     thumbnail: {
-      required: true,
       type: String,
     },
     modules: [{ type: Schema.ObjectId, ref: "Module" }],
     price: {
       required: true,
+      default: 0,
       type: Number,
-    },
-    active: {
-      required: true,
-      type: Boolean,
     },
     category: {
       type: Schema.ObjectId,
@@ -46,11 +41,11 @@ const courseSchema = new Schema(
       },
     ],
     learning: {
-      required: true,
       type: [String],
     },
     isPublished: {
       type: Boolean,
+      default: false,
       required: true,
     },
   },
