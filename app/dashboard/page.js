@@ -8,10 +8,11 @@ import { redirect } from "next/navigation";
 export default async function DashboardPage() {
   const { user } = await auth();
   if (!user) redirect("/login");
+
   const loggedInUser = await getAUserByEmail(user?.email);
   if (loggedInUser?.role != "instructor") redirect("/forbidden-page");
   const { courses, totalRevinue, studentLearned, reviews, avgRatings } =
-    await getCoursesByInstructorId(loggedInUser?.id);
+    (await getCoursesByInstructorId(loggedInUser?.id)) || {};
 
   return (
     <div className="p-6">

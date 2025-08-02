@@ -8,23 +8,24 @@ export default async function EnrolledCourseCard({ enrollment }) {
     course: {
       _id: courseId,
       title,
-      category: { title: categoryTitle },
+      category: { title: categoryTitle } = {},
       thumbnail,
       modules,
-    },
-    student: { _id: studentId },
+    } = {},
+    student: { _id: studentId } = {},
   } = enrollment || {};
 
   const {
     // totalCompletedLessons,
     totalCompletedModules,
-    quizAssessment: { assessments, otherMarks },
-  } = await getAReport({
-    course: courseId,
-    student: studentId,
-  });
+    quizAssessment: { assessments, otherMarks } = {},
+  } =
+    (await getAReport({
+      course: courseId,
+      student: studentId,
+    })) || {};
 
-  const assessmentData = assessments.reduce(
+  const assessmentData = assessments?.reduce(
     (acc, curr) => {
       acc.totalQuiz += 1;
       if (curr.attempted) {
@@ -71,18 +72,18 @@ export default async function EnrolledCourseCard({ enrollment }) {
           <div className="flex items-center justify-between mt-2">
             <div className="text-md md:text-sm font-medium text-slate-700">
               Total Quizzes:{" "}
-              <Badge variant="success">{assessmentData.totalQuiz}</Badge>
+              <Badge variant="success">{assessmentData?.totalQuiz}</Badge>
             </div>
 
             <div className="text-md md:text-sm font-medium text-slate-700">
               Quiz Attempted:{" "}
-              <Badge variant="success">{assessmentData.quizAttempted}</Badge>
+              <Badge variant="success">{assessmentData?.quizAttempted}</Badge>
             </div>
           </div>
           <div className="flex items-center justify-end mt-2 border-b pb-2 mb-2">
             <div className="text-md md:text-sm font-medium text-slate-700">
               Correct Quizzes:{" "}
-              <Badge variant="success">{assessmentData.noOfCorrectQuiz}</Badge>
+              <Badge variant="success">{assessmentData?.noOfCorrectQuiz}</Badge>
             </div>
           </div>
           <div className="flex items-center justify-between mt-2">
@@ -91,8 +92,8 @@ export default async function EnrolledCourseCard({ enrollment }) {
             </p>
 
             <p className="text-md md:text-sm font-medium text-slate-700">
-              {`${assessmentData.noOfCorrectQuiz} X 5`} ={" "}
-              {assessmentData.noOfCorrectQuiz * 5}
+              {`${assessmentData?.noOfCorrectQuiz} X 5`} ={" "}
+              {assessmentData?.noOfCorrectQuiz * 5}
             </p>
           </div>
           <div className="flex items-center justify-between mt-2">
@@ -111,7 +112,7 @@ export default async function EnrolledCourseCard({ enrollment }) {
           </p>
 
           <p className="text-md md:text-sm font-medium text-slate-700">
-            = {assessmentData.noOfCorrectQuiz * 5 + otherMarks}
+            = {assessmentData?.noOfCorrectQuiz * 5 + otherMarks}
           </p>
         </div>
       </div>
