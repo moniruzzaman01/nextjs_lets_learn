@@ -10,14 +10,21 @@ import QuizSetForm from "./_components/QuizForm";
 import ModulesForm from "./_components/ModulesForm";
 import PriceForm from "./_components/PriceForm";
 import { getACourse } from "@/queries/course-queries";
+import { getAllCategories } from "@/queries/category-queries";
 
 export default async function EditCourse({ params }) {
   const { courseId } = await params;
   const course = await getACourse(courseId);
+  const categories = await getAllCategories();
+  const options = categories.map((category) => {
+    return {
+      value: category.id,
+      label: category.title,
+    };
+  });
 
   return (
     <>
-      {/* a message for the instructor provided in label */}
       {course?.isPublished ? (
         <AlertBanner
           label="This course is published. It will be visible in the courses page."
@@ -31,7 +38,6 @@ export default async function EditCourse({ params }) {
       )}
       <div className="p-6">
         <div className="flex items-center justify-end">
-          {/* handle the course publishing status */}
           <CourseActions isPublished={course?.isPublished} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
@@ -51,7 +57,11 @@ export default async function EditCourse({ params }) {
               courseId={courseId}
             />
             <ImageForm initialData={{}} courseId={courseId} />
-            <CategoryForm initialData={{}} courseId={courseId} />
+            <CategoryForm
+              initialData={{ category: (course?.category?._id).toString() }}
+              courseId={courseId}
+              options={options}
+            />
 
             <QuizSetForm initialData={{}} courseId={courseId} />
           </div>
