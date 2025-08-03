@@ -54,7 +54,7 @@ export async function getACourse(courseId) {
       path: "testimonials",
       model: Testimonial,
       populate: {
-        path: "user",
+        path: "student",
         model: User,
       },
     })
