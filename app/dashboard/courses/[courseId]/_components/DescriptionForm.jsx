@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { updateACourse } from "@/app/action/user-action";
 
 const formSchema = z.object({
   description: z.string().min(1, {
@@ -24,28 +25,25 @@ const formSchema = z.object({
   }),
 });
 
-export default function DescriptionForm({ initialData, courseId }) {
+export default function DescriptionForm({ initialData = {}, courseId }) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
-
   const toggleEdit = () => setIsEditing((current) => !current);
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: initialData?.description || "",
+      description: initialData.description,
     },
   });
-
   const { isSubmitting, isValid } = form.formState;
-
   const onSubmit = async (values) => {
     try {
-      toast.success("Course updated");
+      await updateACourse(courseId, values);
       toggleEdit();
       router.refresh();
+      toast.success("Description updated successfully!!!");
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong!!!");
     }
   };
 

@@ -46,11 +46,14 @@ export default async function EditCourse({ params }) {
               }}
               courseId={courseId}
             />
-            <DescriptionForm initialData={{}} courseId={1} />
-            <ImageForm initialData={{}} courseId={1} />
-            <CategoryForm initialData={{}} courseId={1} />
+            <DescriptionForm
+              initialData={{ description: course?.description }}
+              courseId={courseId}
+            />
+            <ImageForm initialData={{}} courseId={courseId} />
+            <CategoryForm initialData={{}} courseId={courseId} />
 
-            <QuizSetForm initialData={{}} courseId={1} />
+            <QuizSetForm initialData={{}} courseId={courseId} />
           </div>
           <div className="space-y-6">
             <div>
@@ -66,7 +69,10 @@ export default async function EditCourse({ params }) {
                 <IconBadge icon={CircleDollarSign} />
                 <h2 className="text-xl">Sell you course</h2>
               </div>
-              <PriceForm initialData={{}} courseId={1} />
+              <PriceForm
+                initialData={{ price: course?.price }}
+                courseId={courseId}
+              />
             </div>
           </div>
         </div>
