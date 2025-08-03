@@ -10,7 +10,7 @@ import { User } from "@/models/user-model";
 import { getEnrollmentsByCourseId } from "./enrollment-queries";
 
 export async function getAllCourses() {
-  const courses = await Course.find({})
+  const courses = await Course.find({ isPublished: true })
     .select([
       "title",
       "subtitle",
