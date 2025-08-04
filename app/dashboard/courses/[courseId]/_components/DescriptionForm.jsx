@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { updateACourse } from "@/app/action/user-action";
+import { updateACourse } from "@/app/action/course-action";
 
 const formSchema = z.object({
   description: z.string().min(1, {

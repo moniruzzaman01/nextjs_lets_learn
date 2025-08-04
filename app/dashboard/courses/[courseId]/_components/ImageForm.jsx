@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import FileUpload from "@/components/file-upload";
 import { uploadAnImage } from "@/lib/uploadAnImage";
-import { updateACourse } from "@/app/action/user-action";
+import { updateACourse } from "@/app/action/course-action";
 
 export default function ImageForm({ initialData = {}, courseId }) {
   const router = useRouter();

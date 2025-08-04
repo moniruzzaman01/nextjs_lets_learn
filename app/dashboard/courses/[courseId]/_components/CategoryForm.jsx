@@ -18,7 +18,7 @@ import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { updateACourse } from "@/app/action/user-action";
+import { updateACourse } from "@/app/action/course-action";
 
 const formSchema = z.object({
   category: z.string().min(1),

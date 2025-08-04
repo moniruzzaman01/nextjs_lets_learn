@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { updateACourse } from "@/app/action/user-action";
+import { updateACourse } from "@/app/action/course-action";
 import { toast } from "sonner";
 
 const formSchema = z.object({

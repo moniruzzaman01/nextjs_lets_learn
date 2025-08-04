@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { postACourse } from "@/app/action/user-action";
+import { postACourse } from "@/app/action/course-action";
 import { SectionTitle } from "@/components/section-title";
 
 const addCourseSchema = z.object({

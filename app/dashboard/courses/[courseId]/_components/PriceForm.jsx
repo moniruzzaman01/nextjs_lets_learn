@@ -18,7 +18,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { updateACourse } from "@/app/action/user-action";
+import { updateACourse } from "@/app/action/course-action";
 
 const formSchema = z.object({
   price: z.coerce.number().min(1),
