@@ -29,3 +29,12 @@ export const reorderModules = async (updatedOrders) => {
     throw new Error(error);
   }
 };
+
+export const updateAModule = async (moduleId, moduleData) => {
+  try {
+    const response = await Module.findByIdAndUpdate(moduleId, moduleData);
+    return JSON.parse(JSON.stringify(response));
+  } catch (error) {
+    throw new Error(error);
+  }
+};

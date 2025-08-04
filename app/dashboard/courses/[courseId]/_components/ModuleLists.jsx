@@ -6,8 +6,10 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { useParams } from "next/navigation";
 
 export default function ModuleLists({ items, onReorder }) {
+  const { courseId } = useParams();
   const [modules, setModules] = useState(
     items.sort((a, b) => a.order - b.order)
   );
@@ -69,7 +71,9 @@ export default function ModuleLists({ items, onReorder }) {
                       >
                         {module.isPublished ? "Published" : "Draft"}
                       </Badge>
-                      <Link href={`/dashboard/courses/1/modules/${module._id}`}>
+                      <Link
+                        href={`/dashboard/courses/${courseId}/modules/${module._id}`}
+                      >
                         <Pencil className="w-4 h-4 cursor-pointer hover:opacity-75 transition" />
                       </Link>
                     </div>
