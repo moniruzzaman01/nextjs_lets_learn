@@ -1,29 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "@hello-pangea/dnd";
 import { Grip, Pencil } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
-export default function ModuleLists({ items, onReorder, onEdit }) {
+export default function ModuleLists({ items, onReorder }) {
   const [isMounted, setIsMounted] = useState(false);
   const [modules, setModules] = useState(items);
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
   useEffect(() => {
     setModules(items);
   }, [items]);
-
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -45,7 +37,6 @@ export default function ModuleLists({ items, onReorder, onEdit }) {
 
     onReorder(bulkUpdateData);
   };
-
   if (!isMounted) {
     return null;
   }
@@ -87,10 +78,9 @@ export default function ModuleLists({ items, onReorder, onEdit }) {
                       >
                         {module.isPublished ? "Published" : "Draft"}
                       </Badge>
-                      <Pencil
-                        onClick={() => onEdit(module.id)}
-                        className="w-4 h-4 cursor-pointer hover:opacity-75 transition"
-                      />
+                      <Link href={`/dashboard/courses/1/modules/${module.id}`}>
+                        <Pencil className="w-4 h-4 cursor-pointer hover:opacity-75 transition" />
+                      </Link>
                     </div>
                   </div>
                 )}

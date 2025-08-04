@@ -75,7 +75,10 @@ export default async function EditCourse({ params }) {
                 <h2 className="text-xl">Course Modules</h2>
               </div>
 
-              <ModulesForm initialData={[]} courseId={[]} />
+              <ModulesForm
+                initialData={JSON.parse(JSON.stringify(course?.modules))}
+                courseId={courseId}
+              />
             </div>
             <div>
               <div className="flex items-center gap-x-2">

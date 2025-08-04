@@ -1,17 +1,9 @@
 "use client";
 
+import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Loader2, PlusCircle } from "lucide-react";
@@ -19,55 +11,57 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import ModuleLists from "./ModuleLists";
+import { slugify } from "@/lib/convertData";
+import { postAModule } from "@/app/action/module-action";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 
 const formSchema = z.object({
-  title: z.string().min(1),
+  title: z.string().min(5),
 });
-const initialModules = [
-  {
-    id: "1",
-    title: "Module 1",
-    isPublished: true,
-  },
-  {
-    id: "2",
-    title: "Module 2",
-  },
-];
-export default function ModulesForm({ initialData, courseId }) {
-  const [modules, setModules] = useState(initialModules);
+
+export default function ModulesForm({ initialData = [], courseId }) {
+  const [modules, setModules] = useState(initialData);
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-
   const toggleCreating = () => setIsCreating((current) => !current);
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
     },
   });
-
   const { isSubmitting, isValid } = form.formState;
-
   const onSubmit = async (values) => {
+    setIsUpdating(true);
     try {
-      setModules((modules) => [
-        ...modules,
-        {
-          id: Date.now().toString(),
-          title: values.title,
-        },
-      ]);
-      toast.success("Module created");
-      toggleCreating();
-      router.refresh();
+      values["slug"] = slugify(values.title);
+      values["course"] = courseId;
+      values["order"] = modules.length;
+      const response = await postAModule(values);
+      if (response) {
+        setModules((modules) => [
+          ...modules,
+          {
+            _id: response._id,
+            ...values,
+          },
+        ]);
+        toast.success("Module created successfully!!!");
+        toggleCreating();
+        router.refresh();
+      }
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong!!!");
     }
+    setIsUpdating(false);
   };
-
   const onReorder = async (updateData) => {
     try {
       setIsUpdating(true);
@@ -80,7 +74,6 @@ export default function ModulesForm({ initialData, courseId }) {
       setIsUpdating(false);
     }
   };
-
   const onEdit = (id) => {
     router.push(`/dashboard/courses/1/modules/${1}`);
   };
@@ -106,7 +99,7 @@ export default function ModulesForm({ initialData, courseId }) {
         </Button>
       </div>
 
-      {isCreating && (
+      {isCreating ? (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -133,26 +126,21 @@ export default function ModulesForm({ initialData, courseId }) {
             </Button>
           </form>
         </Form>
-      )}
-      {!isCreating && (
-        <div
-          className={cn(
-            "text-sm mt-2",
-            !modules?.length && "text-slate-500 italic"
-          )}
-        >
-          {!modules?.length && "No module"}
-          <ModuleLists
-            onEdit={onEdit}
-            onReorder={onReorder}
-            items={modules || []}
-          />
-        </div>
-      )}
-      {!isCreating && (
-        <p className="text-xs text-muted-foreground mt-4">
-          Drag & Drop to reorder the modules
-        </p>
+      ) : (
+        <>
+          <div
+            className={cn(
+              "text-sm mt-2",
+              !modules?.length && "text-slate-500 italic"
+            )}
+          >
+            {!modules?.length && "No module"}
+            <ModuleLists onReorder={onReorder} items={modules || []} />
+          </div>
+          <p className="text-xs text-muted-foreground mt-4">
+            Drag & Drop to reorder the modules
+          </p>
+        </>
       )}
     </div>
   );

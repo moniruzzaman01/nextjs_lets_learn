@@ -6,12 +6,12 @@ const moduleSchema = new Schema({
     type: String,
   },
   description: {
-    required: true,
     type: String,
   },
-  status: {
+  isPublished: {
     required: true,
-    type: String,
+    default: false,
+    type: Boolean,
   },
   slug: {
     required: true,
@@ -26,6 +26,9 @@ const moduleSchema = new Schema({
     type: [Schema.ObjectId],
   },
   duration: {
+    type: Number,
+  },
+  order: {
     required: true,
     type: Number,
   },
