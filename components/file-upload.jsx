@@ -1,5 +1,5 @@
 "use client";
-// import uploadIcon from "@/assets/icons/upload.svg";
+
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { CloudUpload } from "lucide-react";
@@ -8,59 +8,22 @@ import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 
 export default function FileUpload(props) {
-  const { isMulti = false, label } = props;
-
-  const [droppedFiles, setDroppedFiles] = useState(null);
-
-  const [isUploading, setIsUploading] = useState(false);
-
+  const { isMulti = false, setImageFile, isUploading } = props;
   const [uploadProgress, setUploadProgress] = useState(0);
-
-  // upload progress utility
-  const startSimulatedProgress = () => {
-    setUploadProgress(0);
-
-    const interval = setInterval(() => {
-      setUploadProgress((prevProgress) => {
-        if (prevProgress >= 95) {
-          clearInterval(interval);
-          prevProgress;
-        }
-        return prevProgress + 5;
-      });
-    }, 500);
-
-    return interval;
-  };
-
   const onDrop = useCallback(async (acceptedFiles) => {
-    // Do something with the files
-
-    setIsUploading(true);
-    const progressInterval = startSimulatedProgress();
-
-    setDroppedFiles(acceptedFiles);
-
-    // await new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve('resolved');
-    //   }, 3000);
-    // });
+    setImageFile(acceptedFiles);
     setUploadProgress(100);
-    clearInterval(progressInterval);
   }, []);
-
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     onDrop,
-    // accept: { 'image/jpeg': [], 'image/png': [] },
+    accept: { "image/*": [".jpg", ".png"] },
+    maxSize: 1 * 1024 * 1024,
     multiple: isMulti,
   });
 
   useEffect(() => {
-    if (fileRejections.length > 1) {
-      toast.error("error");
-    } else if (fileRejections.length > 0) {
-      toast.error("error");
+    if (fileRejections.length > 0) {
+      toast.error(fileRejections[0]?.errors[0]?.message);
     }
   }, [fileRejections]);
 
@@ -80,9 +43,9 @@ export default function FileUpload(props) {
             Click to upload
           </span>{" "}
           or drag and drop <br />
-          Maximum file size 50 MB.
+          Maximum file size 5 MB.
         </h4>
-        {/* <p>Only *.jpeg and *.png images will be accepted</p> */}
+        <p>Only *.jpg and *.png images will be accepted</p>
         {isUploading ? (
           <div className="mx-auto mt-4 w-full max-w-xs">
             <Progress

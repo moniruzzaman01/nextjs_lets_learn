@@ -56,7 +56,10 @@ export default async function EditCourse({ params }) {
               initialData={{ description: course?.description }}
               courseId={courseId}
             />
-            <ImageForm initialData={{}} courseId={courseId} />
+            <ImageForm
+              initialData={{ thumbnail: course?.thumbnail }}
+              courseId={courseId}
+            />
             <CategoryForm
               initialData={{ category: (course?.category?._id).toString() }}
               courseId={courseId}
