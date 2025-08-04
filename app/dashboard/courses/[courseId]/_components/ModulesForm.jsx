@@ -12,7 +12,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import ModuleLists from "./ModuleLists";
 import { slugify } from "@/lib/convertData";
-import { postAModule } from "@/app/action/module-action";
+import { postAModule, reorderModules } from "@/app/action/module-action";
 import {
   Form,
   FormControl,
@@ -65,7 +65,17 @@ export default function ModulesForm({ initialData = [], courseId }) {
   const onReorder = async (updateData) => {
     try {
       setIsUpdating(true);
+      await reorderModules(updateData);
+      const reorderedData = modules.map((module) => {
+        updateData.find((item) => {
+          if (item._id == module._id) {
+            module.order = item.order;
+          }
+        });
 
+        return module;
+      });
+      setModules(reorderedData);
       toast.success("Chapters reordered");
       router.refresh();
     } catch {

@@ -16,3 +16,16 @@ export const postAModule = async (moduleData) => {
     throw new Error(error);
   }
 };
+
+export const reorderModules = async (updatedOrders) => {
+  try {
+    const response = await Promise.all(
+      updatedOrders.map(async (item) => {
+        await Module.findByIdAndUpdate(item._id, { order: item.order });
+      })
+    );
+    return JSON.parse(JSON.stringify(response));
+  } catch (error) {
+    throw new Error(error);
+  }
+};

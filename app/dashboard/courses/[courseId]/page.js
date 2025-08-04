@@ -76,7 +76,11 @@ export default async function EditCourse({ params }) {
               </div>
 
               <ModulesForm
-                initialData={JSON.parse(JSON.stringify(course?.modules))}
+                initialData={JSON.parse(
+                  JSON.stringify(
+                    course?.modules?.sort((a, b) => a.order - b.order)
+                  )
+                )}
                 courseId={courseId}
               />
             </div>

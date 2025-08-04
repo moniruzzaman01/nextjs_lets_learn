@@ -8,38 +8,25 @@ import Link from "next/link";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 export default function ModuleLists({ items, onReorder }) {
-  const [isMounted, setIsMounted] = useState(false);
-  const [modules, setModules] = useState(items);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  useEffect(() => {
-    setModules(items);
-  }, [items]);
+  const [modules, setModules] = useState(
+    items.sort((a, b) => a.order - b.order)
+  );
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
     const items = Array.from(modules);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-
     const startIndex = Math.min(result.source.index, result.destination.index);
     const endIndex = Math.max(result.source.index, result.destination.index);
-
     const updatedModules = items.slice(startIndex, endIndex + 1);
-
     setModules(items);
-
     const bulkUpdateData = updatedModules.map((module) => ({
-      id: module.id,
-      position: items.findIndex((item) => item.id === module.id),
+      _id: module._id,
+      order: items.findIndex((item) => item._id === module._id),
     }));
-
     onReorder(bulkUpdateData);
   };
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -47,7 +34,11 @@ export default function ModuleLists({ items, onReorder }) {
         {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             {modules.map((module, index) => (
-              <Draggable key={module.id} draggableId={module.id} index={index}>
+              <Draggable
+                key={module._id}
+                draggableId={module._id}
+                index={index}
+              >
                 {(provided) => (
                   <div
                     className={cn(
@@ -78,7 +69,7 @@ export default function ModuleLists({ items, onReorder }) {
                       >
                         {module.isPublished ? "Published" : "Draft"}
                       </Badge>
-                      <Link href={`/dashboard/courses/1/modules/${module.id}`}>
+                      <Link href={`/dashboard/courses/1/modules/${module._id}`}>
                         <Pencil className="w-4 h-4 cursor-pointer hover:opacity-75 transition" />
                       </Link>
                     </div>
