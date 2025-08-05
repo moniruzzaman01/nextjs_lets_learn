@@ -10,7 +10,8 @@ import LessonTitleForm from "./LessonTitleForm";
 import LessonDescriptionForm from "./LessonDescriptionForm";
 import LessonAccessForm from "./LessonAccessForm";
 import { useParams } from "next/navigation";
-// import VideoUrlForm from "./VideoUrlForm";
+import VideoUrlForm from "@/components/video-url-form";
+import { formatSecondsToHMS } from "@/lib/formatTime";
 
 export default function LessonModal({ open, setOpen, lesson, lessonId }) {
   const { courseId } = useParams();
@@ -34,7 +35,7 @@ export default function LessonModal({ open, setOpen, lesson, lessonId }) {
                 Back to edit course
               </Link>
               <div className="flex items-center justify-end">
-                <CourseActions />
+                <CourseActions isPublished={lesson.isPublished} />
               </div>
             </div>
           </div>
@@ -70,13 +71,14 @@ export default function LessonModal({ open, setOpen, lesson, lessonId }) {
                 <IconBadge icon={Video} />
                 <h2 className="text-xl">Add a video</h2>
               </div>
-              {/* <VideoUrlForm
+              <VideoUrlForm
                 initialData={{
-                  url: "https://www.youtube.com/embed/Cn4G2lZ_g2I?si=8FxqU8_NU6rYOrG1",
+                  // video_url: "https://www.youtube.com/embed/Cn4G2lZ_g2I?si=8FxqU8_NU6rYOrG1",
+                  video_url: lesson.video_url,
+                  duration: formatSecondsToHMS(lesson.duration),
                 }}
-                courseId={1}
-                lessonId={1}
-              /> */}
+                lessonId={lessonId}
+              />
             </div>
           </div>
         </div>
