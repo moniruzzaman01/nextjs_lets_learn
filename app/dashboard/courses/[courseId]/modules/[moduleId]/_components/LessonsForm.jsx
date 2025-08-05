@@ -26,7 +26,7 @@ const formSchema = z.object({
   title: z.string().min(5),
 });
 
-export default function ({ initialData = [], moduleId }) {
+export default function LessonsForm({ initialData = [], moduleId }) {
   const [isEditing, setIsEditing] = useState(false);
   const [lessons, setLessons] = useState(initialData);
   const router = useRouter();

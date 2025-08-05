@@ -5,7 +5,7 @@ import CourseActions from "../../_components/CourseActions";
 import IconBadge from "@/components/icon-badge";
 import ModuleTitleForm from "./_components/ModuleTitleForm";
 import { getAModule } from "@/queries/module-queries";
-import LessonForm from "./_components/LessonForm";
+import LessonsForm from "./_components/LessonsForm";
 
 export default async function editModule({ params }) {
   const { courseId, moduleId } = await params;
@@ -51,7 +51,7 @@ export default async function editModule({ params }) {
                 <IconBadge icon={BookOpenCheck} />
                 <h2 className="text-xl">Manage Your Lessons</h2>
               </div>
-              <LessonForm
+              <LessonsForm
                 initialData={JSON.parse(JSON.stringify(courseModule.lessonIds))}
                 moduleId={moduleId}
               />
