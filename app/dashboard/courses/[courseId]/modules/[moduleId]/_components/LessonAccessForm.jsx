@@ -10,6 +10,7 @@ import { Delete, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { updateALesson } from "@/app/action/lesson-action";
 import {
   Form,
   FormControl,
@@ -17,7 +18,6 @@ import {
   FormField,
   FormItem,
 } from "@/components/ui/form";
-import { updateALesson } from "@/app/action/lesson-action";
 
 const formSchema = z.object({
   isPublic: z.boolean().default(false),
@@ -35,7 +35,6 @@ export default function LessonAccessForm({ initialData, lessonId }) {
   const { isSubmitting, isValid } = form.formState;
   const onSubmit = async (values) => {
     try {
-      console.log("---public", values);
       await updateALesson(lessonId, values);
       setLesson(values);
       toast.success("Lesson updated successfully!!!");
