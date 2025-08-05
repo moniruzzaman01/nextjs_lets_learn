@@ -18,3 +18,16 @@ export const postALesson = async (lesson, moduleId) => {
     throw new Error(error);
   }
 };
+
+export const reorderLessons = async (updatedOrders) => {
+  try {
+    const response = await Promise.all(
+      updatedOrders.map(async (item) => {
+        await Lesson.findByIdAndUpdate(item._id, { order: item.order });
+      })
+    );
+    return JSON.parse(JSON.stringify(response));
+  } catch (error) {
+    throw new Error(error);
+  }
+};

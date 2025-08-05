@@ -28,6 +28,10 @@ const lessonSchema = new Schema({
     default: "private",
     type: String,
   },
+  order: {
+    required: true,
+    type: Number,
+  },
 });
 
 export const Lesson =

@@ -13,7 +13,7 @@ import { toast } from "sonner";
 // import LessonModal from "./LessonModal";
 import LessonList from "./LessonList";
 import { slugify } from "@/lib/convertData";
-import { postALesson } from "@/app/action/lesson-action";
+import { postALesson, reorderLessons } from "@/app/action/lesson-action";
 import {
   Form,
   FormControl,
@@ -45,6 +45,7 @@ export default function LessonsForm({ initialData = [], moduleId }) {
     setIsUpdating(true);
     try {
       values["slug"] = slugify(values.title);
+      values["order"] = lessons.length;
       const response = await postALesson(values, moduleId);
       if (response) {
         setLessons((lessons) => [
@@ -67,11 +68,21 @@ export default function LessonsForm({ initialData = [], moduleId }) {
   const onReorder = async (updateData) => {
     try {
       setIsUpdating(true);
+      await reorderLessons(updateData);
+      const reorderedData = lessons.map((lesson) => {
+        updateData.find((item) => {
+          if (item._id == lesson._id) {
+            lesson.order = item.order;
+          }
+        });
 
-      toast.success("Lesson reordered");
+        return lesson;
+      });
+      setLessons(reorderedData);
+      toast.success("Lesson reordered!!!");
       router.refresh();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong!!!");
     } finally {
       setIsUpdating(false);
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { Grip, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,29 +8,23 @@ import { Badge } from "@/components/ui/badge";
 import { CirclePlay } from "lucide-react";
 
 export default function LessonList({ items, onReorder, onEdit }) {
-  const [lessons, setLessons] = useState(items);
-  useEffect(() => {
-    setLessons(items);
-  }, [items]);
+  const [lessons, setLessons] = useState(
+    items.sort((a, b) => a.order - b.order)
+  );
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
-    const items = Array.from(modules);
+    const items = Array.from(lessons);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-
     const startIndex = Math.min(result.source.index, result.destination.index);
     const endIndex = Math.max(result.source.index, result.destination.index);
-
-    const updatedModules = items.slice(startIndex, endIndex + 1);
-
+    const updatedLessons = items.slice(startIndex, endIndex + 1);
     setLessons(items);
-
-    const bulkUpdateData = updatedModules.map((module) => ({
-      id: module.id,
-      position: items.findIndex((item) => item.id === module.id),
+    const bulkUpdateData = updatedLessons.map((lesson) => ({
+      _id: lesson._id,
+      order: items.findIndex((item) => item._id === lesson._id),
     }));
-
     onReorder(bulkUpdateData);
   };
 
