@@ -13,7 +13,6 @@ import { useParams } from "next/navigation";
 // import VideoUrlForm from "./VideoUrlForm";
 
 export default function LessonModal({ open, setOpen, lesson, lessonId }) {
-  // console.log("-----lesson", lesson);
   const { courseId } = useParams();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -51,9 +50,8 @@ export default function LessonModal({ open, setOpen, lesson, lessonId }) {
                   lessonId={lessonId}
                 />
                 <LessonDescriptionForm
-                  initialData={{}}
-                  courseId={"1"}
-                  lessonId={"1"}
+                  initialData={{ description: lesson.description }}
+                  lessonId={lessonId}
                 />
               </div>
               <div>
