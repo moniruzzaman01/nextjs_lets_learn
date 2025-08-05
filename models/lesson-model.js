@@ -23,10 +23,10 @@ const lessonSchema = new Schema({
     required: true,
     type: String,
   },
-  access: {
+  isPublic: {
     required: true,
-    default: "private",
-    type: String,
+    default: false,
+    type: Boolean,
   },
   order: {
     required: true,

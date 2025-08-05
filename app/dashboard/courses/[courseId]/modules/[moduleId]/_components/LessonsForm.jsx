@@ -10,7 +10,7 @@ import { Delete, Loader2, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-// import LessonModal from "./LessonModal";
+import LessonModal from "./LessonModal";
 import LessonList from "./LessonList";
 import { slugify } from "@/lib/convertData";
 import { postALesson, reorderLessons } from "@/app/action/lesson-action";
@@ -32,6 +32,7 @@ export default function LessonsForm({ initialData = [], moduleId }) {
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [lessonToBeEdited, setLessonToBeEdited] = useState({});
   const toggleCreating = () => setIsCreating((current) => !current);
   const toggleEditing = () => setIsEditing((current) => !current);
   const form = useForm({
@@ -88,6 +89,8 @@ export default function LessonsForm({ initialData = [], moduleId }) {
     }
   };
   const onEdit = (id) => {
+    const lesson = lessons.find((lesson) => lesson._id === id);
+    setLessonToBeEdited(lesson);
     setIsEditing(true);
   };
 
@@ -162,7 +165,12 @@ export default function LessonsForm({ initialData = [], moduleId }) {
           </p>
         </>
       )}
-      {/* <LessonModal open={isEditing} setOpen={setIsEditing} /> */}
+      <LessonModal
+        open={isEditing}
+        setOpen={setIsEditing}
+        lesson={lessonToBeEdited}
+        lessonId={lessonToBeEdited._id}
+      />
     </div>
   );
 }
