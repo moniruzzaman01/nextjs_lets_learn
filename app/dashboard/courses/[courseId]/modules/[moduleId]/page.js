@@ -5,7 +5,7 @@ import CourseActions from "../../_components/CourseActions";
 import IconBadge from "@/components/icon-badge";
 import ModuleTitleForm from "./_components/ModuleTitleForm";
 import { getAModule } from "@/queries/module-queries";
-// import LessonForm from "./_components/LessonForm";
+import LessonForm from "./_components/LessonForm";
 
 export default async function editModule({ params }) {
   const { courseId, moduleId } = await params;
@@ -26,7 +26,7 @@ export default async function editModule({ params }) {
               className="flex items-center text-sm hover:opacity-75 transition mb-6"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to course setup
+              Back to edit course
             </Link>
             <div className="flex items-center justify-end">
               <CourseActions />
@@ -49,9 +49,12 @@ export default async function editModule({ params }) {
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={BookOpenCheck} />
-                <h2 className="text-xl">Module Lessons</h2>
+                <h2 className="text-xl">Manage Your Lessons</h2>
               </div>
-              {/* <LessonForm /> */}
+              <LessonForm
+                initialData={JSON.parse(JSON.stringify(courseModule.lessonIds))}
+                moduleId={moduleId}
+              />
             </div>
           </div>
           <div>

@@ -6,19 +6,17 @@ const lessonSchema = new Schema({
     type: String,
   },
   description: {
-    required: false,
     type: String,
   },
   duration: {
-    required: true,
     type: Number,
   },
   video_url: {
-    required: true,
     type: String,
   },
-  published: {
+  isPublished: {
     required: true,
+    default: false,
     type: Boolean,
   },
   slug: {
@@ -27,9 +25,23 @@ const lessonSchema = new Schema({
   },
   access: {
     required: true,
+    default: "private",
     type: String,
   },
 });
 
 export const Lesson =
   mongoose.models.Lesson ?? mongoose.model("Lesson", lessonSchema);
+
+//   {
+//   "_id": {
+//     "$oid": "663a0806bfe65e5778eedf35"
+//   },
+//   "title": "Introduction to Variables",
+//   "description": "Learn the basics of variables in programming.",
+//   "duration": "10:30",
+//   "video_url": "https://example.com/variables_video",
+//   "published": true,
+//   "slug": "introduction-to-variables",
+//   "access": "public"
+// }
