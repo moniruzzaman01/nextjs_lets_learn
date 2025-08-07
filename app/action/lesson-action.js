@@ -2,6 +2,8 @@
 
 import { Lesson } from "@/models/lesson-model";
 import { Module } from "@/models/module-model";
+import mongoose from "mongoose";
+import { success } from "zod";
 
 export const postALesson = async (lesson, moduleId) => {
   try {
@@ -36,6 +38,25 @@ export const updateALesson = async (lessonId, lesson) => {
   try {
     const response = await Lesson.findByIdAndUpdate(lessonId, lesson).lean();
     return JSON.parse(JSON.stringify(response));
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const deleteALesson = async (lessonId, moduleId) => {
+  try {
+    const updateModule = await Module.findByIdAndUpdate(
+      moduleId,
+      {
+        $pull: { lessonIds: new mongoose.Types.ObjectId(lessonId) },
+      },
+      { new: true }
+    );
+    if (updateModule.lessonIds.includes(lessonId)) {
+      throw new Error("Failed to delete the lesson from this Module!!!");
+    }
+    const isDeleted = await Lesson.findByIdAndDelete(lessonId);
+    return isDeleted ? { success: true } : { success: false };
   } catch (error) {
     throw new Error(error);
   }

@@ -4,7 +4,6 @@ import { Eye } from "lucide-react";
 import { Video } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import CourseActions from "../../../_components/CourseActions";
 import IconBadge from "@/components/icon-badge";
 import LessonTitleForm from "./LessonTitleForm";
 import LessonDescriptionForm from "./LessonDescriptionForm";
@@ -12,9 +11,10 @@ import LessonAccessForm from "./LessonAccessForm";
 import { useParams } from "next/navigation";
 import VideoUrlForm from "@/components/video-url-form";
 import { formatSecondsToHMS } from "@/lib/formatTime";
+import LessonActions from "./LessonActions";
 
 export default function LessonModal({ open, setOpen, lesson, lessonId }) {
-  const { courseId } = useParams();
+  const { courseId, moduleId } = useParams();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTitle hidden>Dialog Title</DialogTitle>
@@ -35,7 +35,11 @@ export default function LessonModal({ open, setOpen, lesson, lessonId }) {
                 Back to edit course
               </Link>
               <div className="flex items-center justify-end">
-                <CourseActions isPublished={lesson.isPublished} />
+                <LessonActions
+                  lessonId={lessonId}
+                  moduleId={moduleId}
+                  isPublished={lesson.isPublished}
+                />
               </div>
             </div>
           </div>
@@ -73,7 +77,6 @@ export default function LessonModal({ open, setOpen, lesson, lessonId }) {
               </div>
               <VideoUrlForm
                 initialData={{
-                  // video_url: "https://www.youtube.com/embed/Cn4G2lZ_g2I?si=8FxqU8_NU6rYOrG1",
                   video_url: lesson.video_url,
                   duration: formatSecondsToHMS(lesson.duration),
                 }}

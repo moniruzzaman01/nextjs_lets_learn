@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-// import { VideoPlayer } from "@/app/(player)/[course_slug]/[lesson]/_components/video-player";
+import { VideoPlayer } from "@/app/(player)/[course_slug]/[lesson]/_components/VideoPlayer";
 
 const formSchema = z.object({
   video_url: z.string().min(10, {
@@ -69,13 +69,7 @@ export default function VideoUrlForm({ initialData = {}, courseId, lessonId }) {
           )}
         </Button>
       </div>
-      {!isEditing && (
-        <>
-          <p className="text-sm mt-2">{lesson.video_url}</p>
-          <div className="mt-6">{/* <VideoPlayer /> */}</div>
-        </>
-      )}
-      {isEditing && (
+      {isEditing ? (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -124,6 +118,13 @@ export default function VideoUrlForm({ initialData = {}, courseId, lessonId }) {
             </div>
           </form>
         </Form>
+      ) : (
+        <>
+          <p className="text-sm mt-2">{lesson.video_url}</p>
+          <div className="mt-6">
+            <VideoPlayer lesson={lesson} />
+          </div>
+        </>
       )}
     </div>
   );
