@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { Grip, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { CirclePlay } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
-export default function LessonList({ items, onReorder, onEdit }) {
+export default function LessonList({ items, onReorder }) {
+  const { courseId, moduleId } = useParams();
   const [lessons, setLessons] = useState(
     items.sort((a, b) => a.order - b.order)
   );
@@ -27,6 +30,9 @@ export default function LessonList({ items, onReorder, onEdit }) {
     }));
     onReorder(bulkUpdateData);
   };
+  useEffect(() => {
+    setLessons(items.sort((a, b) => a.order - b.order));
+  }, [items]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -72,10 +78,11 @@ export default function LessonList({ items, onReorder, onEdit }) {
                       >
                         {lesson.isPublished ? "Published" : "Draft"}
                       </Badge>
-                      <Pencil
-                        onClick={() => onEdit(lesson._id)}
-                        className="w-4 h-4 cursor-pointer hover:opacity-75 transition"
-                      />
+                      <Link
+                        href={`/dashboard/courses/${courseId}/modules/${moduleId}/lessons/${lesson._id}`}
+                      >
+                        <Pencil className="w-4 h-4 cursor-pointer hover:opacity-75 transition" />
+                      </Link>
                     </div>
                   </div>
                 )}

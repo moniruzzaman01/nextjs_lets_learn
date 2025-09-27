@@ -17,6 +17,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   description: z.string().min(1),
@@ -64,20 +65,16 @@ export default function LessonDescriptionForm({ initialData = {}, lessonId }) {
           )}
         </Button>
       </div>
-      {/* {!isEditing && (
+      {!isEditing && (
         <div
           className={cn(
-            "text-sm mt-2",
+            "text-sm mt-2 pb-2",
             !initialData.description && "text-slate-500 italic"
           )}
         >
-          {!initialData.description && "No description"}
-          {initialData.description && (
-            <Preview value={initialData.description} />
-          )}
+          {lesson.description ? lesson.description : "No description"}
         </div>
-      )} */}
-      {/* {true && ( */}
+      )}
       {isEditing && (
         <Form {...form}>
           <form

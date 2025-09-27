@@ -1,44 +1,68 @@
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+"use client";
+
+import IconBadge from "@/components/icon-badge";
 import { LayoutDashboard } from "lucide-react";
 import { Eye } from "lucide-react";
 import { Video } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import IconBadge from "@/components/icon-badge";
-import LessonTitleForm from "./LessonTitleForm";
-import LessonDescriptionForm from "./LessonDescriptionForm";
-import LessonAccessForm from "./LessonAccessForm";
-import { useParams } from "next/navigation";
+import LessonTitleForm from "../../../_components/LessonTitleForm";
+import LessonDescriptionForm from "../../../_components/LessonDescriptionForm";
+import LessonAccessForm from "../../../_components/LessonAccessForm";
+import { useParams, useRouter } from "next/navigation";
 import VideoUrlForm from "@/components/video-url-form";
 import { formatSecondsToHMS } from "@/lib/formatTime";
-import LessonActions from "./LessonActions";
+import LessonActions from "../../../_components/LessonActions";
+import { useEffect, useState } from "react";
+import { fetchALesson } from "@/app/action/lesson-action";
 
-export default function LessonModal({ open, setOpen, lesson, lessonId }) {
-  const { courseId, moduleId } = useParams();
+export default function EditLessonModal() {
+  const { lessonId, moduleId } = useParams();
+  const [lesson, setLesson] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    (async () => {
+      const data = await fetchALesson(lessonId);
+      setLesson(data);
+    })();
+  }, [lessonId]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        router.back();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [router]);
+
+  if (!lesson) return <>Loading....</>;
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTitle hidden>Dialog Title</DialogTitle>
-      <DialogContent
-        className="sm:max-w-[1200px] w-[96%] overflow-y-auto max-h-[90vh]"
-        onInteractOutside={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <div>
+    <div className=" bg-zinc-500 w-screen h-screen fixed top-0 left-0 z-50 bg-opacity-50 flex items-center">
+      <div className="w-[96%] overflow-y-auto  bg-white p-[2%] sm:max-w-[1200px] max-h-[90vh] mx-auto my-auto rounded-xl">
+        <div className=" w-full mx-auto">
           <div className="flex items-center justify-between">
             <div className="w-full">
-              <Link
-                href={`/dashboard/courses/${courseId}`}
+              <button
+                onClick={() => {
+                  router.refresh();
+                  router.back();
+                }}
                 className="flex items-center text-sm hover:opacity-75 transition mb-6"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to edit course
-              </Link>
+                Back to course setup
+              </button>
               <div className="flex items-center justify-end">
                 <LessonActions
                   lessonId={lessonId}
                   moduleId={moduleId}
                   isPublished={lesson.isPublished}
+                  setLesson={setLesson}
                 />
               </div>
             </div>
@@ -85,7 +109,7 @@ export default function LessonModal({ open, setOpen, lesson, lessonId }) {
             </div>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }

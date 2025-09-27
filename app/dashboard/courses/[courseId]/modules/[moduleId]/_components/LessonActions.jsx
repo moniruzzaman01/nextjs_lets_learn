@@ -10,6 +10,7 @@ export default function LessonActions({
   isPublished = false,
   lessonId,
   moduleId,
+  setLesson = () => {},
 }) {
   const router = useRouter();
   const handlePublish = async () => {
@@ -18,6 +19,9 @@ export default function LessonActions({
       toast.success(
         `Lesson ${isPublished ? "Unpublished" : "Published"} successfully!!!`
       );
+      setLesson((prev) => {
+        return { ...prev, isPublished: !isPublished };
+      });
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong!!!");

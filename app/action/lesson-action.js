@@ -3,7 +3,6 @@
 import { Lesson } from "@/models/lesson-model";
 import { Module } from "@/models/module-model";
 import mongoose from "mongoose";
-import { success } from "zod";
 
 export const postALesson = async (lesson, moduleId) => {
   try {
@@ -57,6 +56,15 @@ export const deleteALesson = async (lessonId, moduleId) => {
     }
     const isDeleted = await Lesson.findByIdAndDelete(lessonId);
     return isDeleted ? { success: true } : { success: false };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const fetchALesson = async (lessonId) => {
+  try {
+    const response = await Lesson.findById(lessonId);
+    return JSON.parse(JSON.stringify(response));
   } catch (error) {
     throw new Error(error);
   }

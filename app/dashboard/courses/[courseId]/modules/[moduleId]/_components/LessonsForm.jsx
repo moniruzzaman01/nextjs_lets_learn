@@ -8,9 +8,8 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Delete, Loader2, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import LessonModal from "./LessonModal";
 import LessonList from "./LessonList";
 import { slugify } from "@/lib/convertData";
 import { postALesson, reorderLessons } from "@/app/action/lesson-action";
@@ -27,14 +26,11 @@ const formSchema = z.object({
 });
 
 export default function LessonsForm({ initialData = [], moduleId }) {
-  const [isEditing, setIsEditing] = useState(false);
   const [lessons, setLessons] = useState(initialData);
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [lessonToBeEdited, setLessonToBeEdited] = useState({});
   const toggleCreating = () => setIsCreating((current) => !current);
-  const toggleEditing = () => setIsEditing((current) => !current);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -88,11 +84,9 @@ export default function LessonsForm({ initialData = [], moduleId }) {
       setIsUpdating(false);
     }
   };
-  const onEdit = (id) => {
-    const lesson = lessons.find((lesson) => lesson._id === id);
-    setLessonToBeEdited(lesson);
-    setIsEditing(true);
-  };
+  useEffect(() => {
+    setLessons(initialData);
+  }, [initialData]);
 
   return (
     <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
@@ -154,23 +148,13 @@ export default function LessonsForm({ initialData = [], moduleId }) {
             )}
           >
             {!lessons?.length && "No module"}
-            <LessonList
-              onEdit={onEdit}
-              onReorder={onReorder}
-              items={lessons || []}
-            />
+            <LessonList onReorder={onReorder} items={lessons || []} />
           </div>
           <p className="text-xs text-muted-foreground mt-4">
             Drag & Drop to reorder the lessons
           </p>
         </>
       )}
-      <LessonModal
-        open={isEditing}
-        setOpen={setIsEditing}
-        lesson={lessonToBeEdited}
-        lessonId={lessonToBeEdited._id}
-      />
     </div>
   );
 }
