@@ -1,11 +1,11 @@
 import AlertBanner from "@/components/alert-banner";
 import { ArrowLeft, BookOpenCheck, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
-import CourseActions from "../../_components/CourseActions";
 import IconBadge from "@/components/icon-badge";
 import ModuleTitleForm from "./_components/ModuleTitleForm";
 import { getAModule } from "@/queries/module-queries";
 import LessonsForm from "./_components/LessonsForm";
+import ModuleActions from "./_components/ModuleActions";
 
 export default async function editModule({ params }) {
   const { courseId, moduleId } = await params;
@@ -29,7 +29,11 @@ export default async function editModule({ params }) {
               Back to edit course
             </Link>
             <div className="flex items-center justify-end">
-              <CourseActions />
+              <ModuleActions
+                moduleId={moduleId}
+                courseId={courseId}
+                isPublished={courseModule?.isPublished}
+              />
             </div>
           </div>
         </div>

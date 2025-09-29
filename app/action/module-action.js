@@ -2,6 +2,8 @@
 
 import { Course } from "@/models/course-model";
 import { Module } from "@/models/module-model";
+import mongoose from "mongoose";
+import { revalidatePath } from "next/cache";
 
 export const postAModule = async (moduleData) => {
   try {
@@ -34,6 +36,25 @@ export const updateAModule = async (moduleId, moduleData) => {
   try {
     const response = await Module.findByIdAndUpdate(moduleId, moduleData);
     return JSON.parse(JSON.stringify(response));
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+export const deleteAModule = async (moduleId, courseId) => {
+  try {
+    const updateCourse = await Course.findByIdAndUpdate(
+      courseId,
+      {
+        $pull: { modules: new mongoose.Types.ObjectId(moduleId) },
+      },
+      { new: true }
+    );
+    if (updateCourse.modules.includes(moduleId)) {
+      throw new Error("Failed to delete the module from the course!!!");
+    }
+    const isDeleted = await Module.findByIdAndDelete(moduleId);
+    revalidatePath(`/dashboard/courses/${courseId}`);
+    return isDeleted ? { success: true } : { success: false };
   } catch (error) {
     throw new Error(error);
   }

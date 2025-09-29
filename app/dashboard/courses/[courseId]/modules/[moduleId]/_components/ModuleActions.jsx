@@ -3,23 +3,23 @@
 import { Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { deleteACourse, updateACourse } from "@/app/action/course-action";
+import { deleteAModule, updateAModule } from "@/app/action/module-action";
 import { toast } from "sonner";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function CourseActions({
+export default function ModuleActions({
   courseId,
+  moduleId,
   isPublished: publish = false,
 }) {
   const [isPublished, setIsPublished] = useState(publish);
   const router = useRouter();
-
   const handlePublish = async () => {
     try {
-      await updateACourse(courseId, { isPublished: !isPublished });
+      await updateAModule(moduleId, { isPublished: !isPublished });
       toast.success(
-        `Course ${isPublished ? "Unpublished" : "Published"} successfully!!!`
+        `Module ${isPublished ? "Unpublished" : "Published"} successfully!!!`
       );
       setIsPublished(!isPublished);
     } catch (error) {
@@ -28,12 +28,9 @@ export default function CourseActions({
   };
   const handleDelete = async () => {
     try {
-      const response = await deleteACourse(courseId);
-      if (response.success) {
-        toast.success("Course deleted successfully!!!");
-      } else {
-        toast.error("Course not found, Plese refresh the page!!!");
-      }
+      const response = await deleteAModule(moduleId, courseId);
+      if (response.success) toast.success("Module deleted successfully!!!");
+      else toast.error("Module not found, Plese refresh the page!!!");
       router.back();
     } catch (error) {
       toast.error(`${error ? error?.message : "Something went wrong!!!"}`);
@@ -53,7 +50,7 @@ export default function CourseActions({
 
         {isPublished && (
           <div className="absolute opacity-0 group-hover:opacity-100 pointer-events-none top-full mt-2 py-1 w-[15vw] rounded right-0 bg-slate-100 duration-200 transition-opacity text-xs text-center">
-            Please unpublish the course before delete
+            Please unpublish the module before delete
           </div>
         )}
       </div>

@@ -38,7 +38,10 @@ export default async function EditCourse({ params }) {
       )}
       <div className="p-6">
         <div className="flex items-center justify-end">
-          <CourseActions isPublished={course?.isPublished} />
+          <CourseActions
+            isPublished={course?.isPublished}
+            courseId={courseId}
+          />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
           <div>
@@ -61,7 +64,7 @@ export default async function EditCourse({ params }) {
               courseId={courseId}
             />
             <CategoryForm
-              initialData={{ category: (course?.category?._id).toString() }}
+              initialData={{ category: course?.category?._id?.toString() }}
               courseId={courseId}
               options={options}
             />
