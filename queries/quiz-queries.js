@@ -9,21 +9,3 @@ export const getAllQuizsets = async () => {
     throw new Error(error);
   }
 };
-
-export const addAQuizset = async (
-  quizsetData = {
-    title: "Python Basics Quiz Set",
-    description: "Test your knowledge about Python fundamentals.",
-    mark: 15,
-    slug: "python-basics-quiz",
-    status: "active",
-    quizIds: [],
-  }
-) => {
-  try {
-    const quizset = await Quizset.create(quizsetData);
-    return quizset;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
