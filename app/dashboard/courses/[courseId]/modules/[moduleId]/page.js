@@ -14,8 +14,12 @@ export default async function editModule({ params }) {
   return (
     <>
       <AlertBanner
-        label="This module is unpublished. It will not be visible in the course."
-        variant="warning"
+        label={
+          courseModule?.isPublished
+            ? "This module is published. It will be visible in the modules page."
+            : "This module is unpublished. It will not be visible in the modules page."
+        }
+        variant={courseModule?.isPublished ? "success" : "warning"}
       />
 
       <div className="p-6">

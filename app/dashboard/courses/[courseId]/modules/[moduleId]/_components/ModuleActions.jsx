@@ -15,9 +15,10 @@ export default function ModuleActions({
 }) {
   const [isPublished, setIsPublished] = useState(publish);
   const router = useRouter();
+
   const handlePublish = async () => {
     try {
-      await updateAModule(moduleId, { isPublished: !isPublished });
+      await updateAModule(moduleId, { isPublished: !isPublished }, courseId);
       toast.success(
         `Module ${isPublished ? "Unpublished" : "Published"} successfully!!!`
       );

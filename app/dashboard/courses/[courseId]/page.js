@@ -25,17 +25,14 @@ export default async function EditCourse({ params }) {
 
   return (
     <>
-      {course?.isPublished ? (
-        <AlertBanner
-          label="This course is published. It will be visible in the courses page."
-          variant="success"
-        />
-      ) : (
-        <AlertBanner
-          label="This course is unpublished. It will not be visible in the courses page."
-          variant="warning"
-        />
-      )}
+      <AlertBanner
+        label={
+          course?.isPublished
+            ? "This course is published. It will be visible in the courses page."
+            : "This course is unpublished. It will not be visible in the courses page."
+        }
+        variant={course?.isPublished ? "success" : "warning"}
+      />
       <div className="p-6">
         <div className="flex items-center justify-end">
           <CourseActions

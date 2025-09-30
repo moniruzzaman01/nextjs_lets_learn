@@ -32,9 +32,10 @@ export const reorderModules = async (updatedOrders) => {
   }
 };
 
-export const updateAModule = async (moduleId, moduleData) => {
+export const updateAModule = async (moduleId, moduleData, courseId) => {
   try {
     const response = await Module.findByIdAndUpdate(moduleId, moduleData);
+    if (courseId) revalidatePath(`/dashboard/courses/${courseId}`);
     return JSON.parse(JSON.stringify(response));
   } catch (error) {
     throw new Error(error);
@@ -54,6 +55,7 @@ export const deleteAModule = async (moduleId, courseId) => {
     }
     const isDeleted = await Module.findByIdAndDelete(moduleId);
     revalidatePath(`/dashboard/courses/${courseId}`);
+    revalidatePath(`/dashboard/courses`);
     return isDeleted ? { success: true } : { success: false };
   } catch (error) {
     throw new Error(error);

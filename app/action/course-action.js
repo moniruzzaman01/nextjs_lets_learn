@@ -23,6 +23,7 @@ export async function updateACourse(courseId, updatedCourseData) {
       courseId,
       updatedCourseData
     );
+    revalidatePath(`/dashboard/courses/${courseId}`);
     return JSON.parse(JSON.stringify(response));
   } catch (error) {
     throw new Error(error);
