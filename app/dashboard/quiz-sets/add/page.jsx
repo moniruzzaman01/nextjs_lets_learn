@@ -38,11 +38,11 @@ const AddQuizSet = () => {
     try {
       values["slug"] = slugify(values["title"]);
       values["isPublished"] = false;
-      await addAQuizset(values);
-      router.push(`/dashboard/quiz-sets/${1}`);
-      toast.success("Quiz Set Created");
+      const response = await addAQuizset(values);
+      router.push(`/dashboard/quiz-sets/${response?._id}`);
+      toast.success("Quiz set created");
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong!!!");
     }
   };
 
