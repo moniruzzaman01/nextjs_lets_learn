@@ -5,9 +5,12 @@ import {
 import { Quiz } from "@/models/quiz-model";
 import { Quizset } from "@/models/quizset-model";
 
-export const getAllQuizsets = async () => {
+export const getAllQuizsets = async (isPublished) => {
   try {
-    const quizsets = await Quizset.find({}).lean();
+    let quizsets;
+    if (isPublished)
+      quizsets = await Quizset.find({ isPublished: true }).lean();
+    else quizsets = await Quizset.find({}).lean();
     return replaceMongoIdInArray(quizsets);
   } catch (error) {
     throw new Error(error);

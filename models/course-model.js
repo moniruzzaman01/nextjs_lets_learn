@@ -1,12 +1,14 @@
 import mongoose, { Schema } from "mongoose";
+import { Quizset } from "./quizset-model";
+import { Category } from "./category-model";
+import { User } from "./user-model";
+import { Testimonial } from "./testimonial-model";
+import { Module } from "./module-model";
 
 const courseSchema = new Schema(
   {
     title: {
       required: true,
-      type: String,
-    },
-    subtitle: {
       type: String,
     },
     description: {
@@ -16,7 +18,7 @@ const courseSchema = new Schema(
     thumbnail: {
       type: String,
     },
-    modules: [{ type: Schema.ObjectId, ref: "Module" }],
+    modules: [{ type: Schema.ObjectId, ref: Module }],
     price: {
       required: true,
       default: 0,
@@ -24,20 +26,20 @@ const courseSchema = new Schema(
     },
     category: {
       type: Schema.ObjectId,
-      ref: "Category",
+      ref: Category,
     },
     instructor: {
       type: Schema.ObjectId,
-      ref: "User",
+      ref: User,
     },
-    quizzes: {
-      required: false,
+    quizset: {
       type: Schema.ObjectId,
+      ref: Quizset,
     },
     testimonials: [
       {
         type: Schema.ObjectId,
-        ref: "Testimonial",
+        ref: Testimonial,
       },
     ],
     learning: {

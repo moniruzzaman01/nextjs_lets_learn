@@ -11,15 +11,23 @@ import ModulesForm from "./_components/ModulesForm";
 import PriceForm from "./_components/PriceForm";
 import { getACourse } from "@/queries/course-queries";
 import { getAllCategories } from "@/queries/category-queries";
+import { getAllQuizsets } from "@/queries/quiz-queries";
 
 export default async function EditCourse({ params }) {
   const { courseId } = await params;
   const course = await getACourse(courseId);
   const categories = await getAllCategories();
-  const options = categories.map((category) => {
+  const categoryOptions = categories.map((category) => {
     return {
       value: category.id,
       label: category.title,
+    };
+  });
+  const quizsets = await getAllQuizsets(true);
+  const quizsetOptions = quizsets.map((qs) => {
+    return {
+      value: qs.id,
+      label: qs.title,
     };
   });
 
@@ -63,10 +71,13 @@ export default async function EditCourse({ params }) {
             <CategoryForm
               initialData={{ category: course?.category?._id?.toString() }}
               courseId={courseId}
-              options={options}
+              options={categoryOptions}
             />
-
-            <QuizSetForm initialData={{}} courseId={courseId} />
+            <QuizSetForm
+              initialData={{ quizSetId: course?.quizset?.toString() }}
+              courseId={courseId}
+              options={quizsetOptions}
+            />
           </div>
           <div className="space-y-6">
             <div>
