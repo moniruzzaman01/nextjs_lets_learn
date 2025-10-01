@@ -40,7 +40,7 @@ export const columns = [
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "isPublished",
     header: ({ column }) => {
       return (
         <Button
@@ -52,13 +52,11 @@ export const columns = [
       );
     },
     cell: ({ row }) => {
-      const status = row.getValue("status");
+      const isPublished = row.getValue("isPublished");
 
       return (
-        <Badge
-          className={cn("bg-gray-400", status == "active" && " bg-emerald-500")}
-        >
-          {status == "active" ? "Published" : "Unpublished"}
+        <Badge className={cn("bg-gray-400", isPublished && " bg-emerald-500")}>
+          {isPublished ? "Published" : "Unpublished"}
         </Badge>
       );
     },

@@ -1,7 +1,7 @@
 import AlertBanner from "@/components/alert-banner";
-import { QuizSetAction } from "./_components/quiz-set-action";
-import { TitleForm } from "./_components/title-form";
-import { AddQuizForm } from "./_components/add-quiz-form";
+import { QuizSetAction } from "./_components/QuizSetAction";
+import { TitleForm } from "./_components/TitleForm";
+import { AddQuizForm } from "./_components/AddQuizForm";
 import { getQuizzesByQuizsetId } from "@/queries/quiz-queries";
 import QuizList from "./_components/QuizList";
 
@@ -12,12 +12,19 @@ const EditQuizSet = async ({ params }) => {
   return (
     <>
       <AlertBanner
-        label="This course is unpublished. It will not be visible in the course."
-        variant="warning"
+        label={
+          quizset?.isPublished
+            ? "This quizset is published. It will be visible in the quizsets page."
+            : "This quizset is unpublished. It will not be visible in the quizsets page."
+        }
+        variant={quizset?.isPublished ? "success" : "warning"}
       />
       <div className="p-6">
         <div className="flex items-center justify-end">
-          <QuizSetAction />
+          <QuizSetAction
+            quizSetId={quizSetId}
+            isPublished={quizset?.isPublished}
+          />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2  gap-6 mt-16">
           <div className="max-lg:order-2">

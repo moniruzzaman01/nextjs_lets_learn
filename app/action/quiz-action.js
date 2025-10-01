@@ -24,6 +24,15 @@ export const updateAQuizset = async (quizsetId, quizsetData) => {
   }
 };
 
+export const deleteAQuizset = async (quizSetId) => {
+  try {
+    const quizset = await Quizset.findByIdAndDelete(quizSetId);
+    return JSON.parse(JSON.stringify(quizset));
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const addAQuiz = async (quizData, quizSetId) => {
   try {
     const quiz = await Quiz.create(quizData);
