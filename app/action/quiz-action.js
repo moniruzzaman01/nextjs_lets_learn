@@ -36,3 +36,22 @@ export const addAQuiz = async (quizData, quizSetId) => {
     throw new Error(error);
   }
 };
+
+export const deleteAQuiz = async (quizId, quizSetId) => {
+  try {
+    const quiz = await Quiz.findByIdAndDelete(quizId);
+    if (!quiz) {
+      throw new Error(`Quiz deletion failed!!!`);
+    }
+    const quizset = await Quizset.findByIdAndUpdate(
+      quizSetId,
+      {
+        $pull: { quizIds: quizId },
+      },
+      { new: true }
+    );
+    return quizset ? true : false;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
