@@ -4,9 +4,17 @@ import ResetPassword from "../_components/ResetPassword";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getAUserByEmail } from "@/queries/user-queries";
+import { headers } from "next/headers";
 
 async function Profile() {
-  const { user } = await auth();
+  const headerlist = await headers();
+  const { user } =
+    (await auth.api.getSession({
+      headers: {
+        cookie: headerlist.get("cookie") || "",
+      },
+    })) || {};
+
   if (!user?.email) {
     return redirect("/login");
   }
@@ -21,7 +29,7 @@ async function Profile() {
           {/* contact section */}
           <Contact loggedInUser={loggedInUser} />
           {/* password change section */}
-          <ResetPassword email={user?.email} />
+          {/* <ResetPassword email={user?.email} /> */}
         </div>
       </div>
     </>

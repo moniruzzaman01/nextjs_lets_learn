@@ -6,9 +6,17 @@ import { getEnrollmentByStudentId } from "@/queries/enrollment-queries";
 import { CircleX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { headers } from "next/headers";
 
 export default async function EnrolledCourses() {
-  const { user } = await auth();
+  const headerlist = await headers();
+  const { user } =
+    (await auth.api.getSession({
+      headers: {
+        cookie: headerlist.get("cookie") || "",
+      },
+    })) || {};
+
   if (!user) {
     redirect("/login");
   }
