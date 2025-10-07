@@ -4,10 +4,17 @@ import { auth } from "@/auth";
 import { Course } from "@/models/course-model";
 import { getAUserByEmail } from "@/queries/user-queries";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 
 export async function postACourse(course) {
   try {
-    const { user } = await auth();
+    const headerlist = await headers();
+    const { user } =
+      (await auth.api.getSession({
+        headers: {
+          cookie: headerlist.get("cookie") || {},
+        },
+      })) || {};
     const loggedInUser = await getAUserByEmail(user?.email);
     course["instructor"] = loggedInUser?.id;
     const response = await Course.create(course);

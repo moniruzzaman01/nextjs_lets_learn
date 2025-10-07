@@ -3,10 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatPrice } from "@/lib/formatPrice";
 import { getCoursesByInstructorId } from "@/queries/course-queries";
 import { getAUserByEmail } from "@/queries/user-queries";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-  const { user } = await auth();
+  const headerlist = await headers();
+  const { user } =
+    (await auth.api.getSession({
+      headers: {
+        cookie: headerlist.get("cookie") || {},
+      },
+    })) || {};
   if (!user) redirect("/login");
 
   const loggedInUser = await getAUserByEmail(user?.email);

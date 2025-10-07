@@ -30,6 +30,7 @@ export function MainNav({ items }) {
   const handleSignOut = async () => {
     await signOut();
     router.push("/");
+    toast.success("Sign Out successfull!!!");
   };
 
   return (

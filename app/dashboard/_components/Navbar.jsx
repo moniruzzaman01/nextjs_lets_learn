@@ -8,21 +8,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import MobileSidebar from "./MobileSidebar";
-// import { signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
 import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
+import { signOut, useSession } from "@/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Navbar() {
-  const [loggedInUser, setLoggedInUser] = useState({});
+  const { data: session, error, isPending } = useSession();
+  const router = useRouter();
 
-  useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/me");
-      const data = await res.json();
-      setLoggedInUser(data);
-    })();
-  }, []);
+  if (error) {
+    router.push("/login");
+    toast.error(error.message);
+  }
+  const handleSignOut = async (event) => {
+    event.preventDefault();
+    await signOut();
+    router.push("/");
+    toast.success("Sign Out successfull!!!");
+  };
 
   return (
     <div className="p-4 border-b h-full flex items-center bg-white shadow-sm">
@@ -31,11 +37,13 @@ export default function Navbar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="cursor-pointer">
-              {loggedInUser?.profilePicture ? (
+              {isPending ? (
+                <Spinner />
+              ) : session?.user?.profilePicture ? (
                 <Image
-                  alt={loggedInUser?.firstName + " " + loggedInUser?.lastName}
+                  alt={session?.user?.firstName + " " + session?.user?.lastName}
                   className="w-[40px] h-[40px] rounded-full border border-black"
-                  src={loggedInUser?.profilePicture}
+                  src={session?.user?.profilePicture}
                   height={40}
                   width={40}
                 />
@@ -46,10 +54,7 @@ export default function Navbar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 mt-4">
             <DropdownMenuItem className="cursor-pointer" asChild>
-              <Link
-                href="#"
-                // onClick={signOut}
-              >
+              <Link href="#" onClick={handleSignOut}>
                 LogOut
               </Link>
             </DropdownMenuItem>
