@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import MobileSidebar from "./MobileSidebar";
-import { signOut } from "next-auth/react";
+// import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
@@ -46,7 +46,10 @@ export default function Navbar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 mt-4">
             <DropdownMenuItem className="cursor-pointer" asChild>
-              <Link href="#" onClick={signOut}>
+              <Link
+                href="#"
+                // onClick={signOut}
+              >
                 LogOut
               </Link>
             </DropdownMenuItem>

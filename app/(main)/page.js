@@ -9,8 +9,8 @@ import Link from "next/link";
 import CourseCard from "./courses/_components/CourseCard";
 
 const HomePage = async () => {
-  const courses = await getAllCourses();
   const categories = await getAllCategories();
+  const courses = await getAllCourses();
 
   return (
     <>
@@ -35,7 +35,7 @@ const HomePage = async () => {
             Learn Today, Lead Tomorrow.
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-            “You don’t understand anything until you learn it more than one
+            “You don&apos;t understand anything until you learn it more than one
             way.”
           </p>
           <div className="flex items-center gap-3 flex-wrap justify-center">

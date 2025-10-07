@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { CircleUserRound, LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
+// import { signOut } from "next-auth/react";
 import ProfileMenu from "./ProfileMenu";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
@@ -17,7 +17,7 @@ export default async function Sidebar() {
     <div className="lg:w-1/4 md:px-3">
       <div className="relative">
         <LogOut
-          onClick={signOut}
+          // onClick={signOut}
           className=" absolute right-4 top-4 cursor-pointer border p-1 rounded-sm hover:bg-slate-100 hover:border-slate-100 transition-all duration-200"
         />
         <div className="p-6 rounded-md shadow dark:shadow-gray-800 bg-white dark:bg-slate-900">

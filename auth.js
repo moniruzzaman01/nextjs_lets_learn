@@ -1,116 +1,82 @@
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import { User } from "./models/user-model";
-import bcrypt from "bcrypt";
-import authConfig from "./auth.config.js"; // make sure this is .js
-import google from "next-auth/providers/google";
+import { betterAuth } from "better-auth";
+import { MongoClient } from "mongodb";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
-async function refreshAccessToken(token) {
-  try {
-    const url =
-      "https://oauth2.googleapis.com/token?" +
-      new URLSearchParams({
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        grant_type: "refresh_token",
-        refresh_token: token.refresh_token,
-      });
+const client = new MongoClient("mongodb://localhost:27017/lets-learn");
+const db = client.db();
 
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+export const auth = betterAuth({
+  database: mongodbAdapter(db, {
+    // Optional: if you don't provide a client, database transactions won't be enabled.
+    client,
+    collections: {
+      user: "my_users222",
+      session: "my_sessions",
+      account: "my_accounts",
+      verification: "my_verifications",
+    },
+  }),
+  emailAndPassword: {
+    enabled: true,
+  },
+  user: {
+    // Define additional fields
+    additionalFields: {
+      firstName: {
+        type: "string",
+        required: true,
       },
-      method: "POST",
-    });
-
-    const refreshedTokens = await response.json();
-
-    if (!response.ok) {
-      throw refreshedTokens;
-    }
-
-    return {
-      ...token,
-      access_token: refreshedTokens?.access_token,
-      expires_in: Date.now() + refreshedTokens?.expires_in * 1000,
-      refresh_token: refreshedTokens?.refresh_token,
-    };
-  } catch (error) {
-    console.log(error);
-
-    return {
-      ...token,
-      error: "RefreshAccessTokenError",
-    };
-  }
-}
-
-export const {
-  handlers: { GET, POST },
-  signIn,
-  signOut,
-  auth,
-} = NextAuth({
-  ...authConfig,
-  providers: [
-    google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
+      lastName: {
+        type: "string",
+        required: true,
       },
-    }),
-    Credentials({
-      credentials: {
-        email: {},
-        password: {},
+      phone: {
+        type: "string",
+        required: false,
       },
-      authorize: async (credentials) => {
-        if (!credentials) return null;
-        try {
-          const user = await User.findOne({ email: credentials?.email });
-          if (user) {
-            const isMatched = bcrypt.compareSync(
-              credentials?.password,
-              user?.password
-            );
-            if (isMatched) {
-              return user;
-            } else {
-              throw new Error("Invalid credentials!");
-            }
-          } else {
-            throw new Error("User not found!");
-          }
-        } catch (error) {
-          throw new Error(error?.message);
-        }
+      role: {
+        type: "string",
+        required: true,
+        defaultValue: "student",
       },
-    }),
-  ],
-  // callbacks: {
-  //   async jwt({ token, user, account }) {
-  //     if (user && account) {
-  //       token.access_token = account?.access_token;
-  //       token.refresh_token = account?.refresh_token;
-  //       token.id_token = account?.id_token;
-  //       token.expires_in = Date.now() + account?.expires_in * 1000;
-  //     }
-
-  //     if (Date.now() > token?.expires_in) {
-  //       return console.log("token expired");
-  //     }
-
-  //     return token;
-  //   },
-
-  //   async session({ session, token }) {
-  //     session.access_token = token?.access_token;
-  //     return session;
-  //   },
-  // },
+      bio: {
+        type: "string",
+        required: false,
+        defaultValue: "",
+      },
+      socialMedia: {
+        type: "string",
+        required: false,
+        defaultValue: "",
+      },
+      profilePicture: {
+        type: "string",
+        required: false,
+        defaultValue: "",
+      },
+      designation: {
+        type: "string",
+        required: false,
+        defaultValue: "",
+      },
+      // Add any other custom fields you need
+    },
+  },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      //   redirectURI: "http://localhost:3000/api/auth/callback", // Important: Use API route
+    },
+    // github: {
+    //   clientId: process.env.GITHUB_CLIENT_ID,
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    //   redirectURI: "http://localhost:3000/api/auth/callback",
+    // },
+  },
+  callbacks: {
+    signIn: (user) => {
+      return user;
+    },
+  },
 });

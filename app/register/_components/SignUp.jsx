@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { authClient } from "@/auth-client";
 
 export default function SignUp({ role }) {
   const router = useRouter();
@@ -26,22 +27,16 @@ export default function SignUp({ role }) {
     const password = formData.get("password");
     const userRole =
       role === "student" || role === "instructor" ? role : "student";
-    const userData = { firstName, lastName, email, password, userRole };
+    const userData = { firstName, lastName, email, password, role: userRole };
 
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+      const { data, error } = await authClient.signUp.email(userData);
 
-      if (response.status === 201) {
+      if (!error) {
         toast.success("Your registration is successful. Please Login!!!");
         router.push("/login");
-      } else if (response.status === 409) {
-        toast.error("User already exists!!!");
+      } else {
+        toast.error(error.message);
       }
     } catch (error) {
       throw new Error(error?.message);

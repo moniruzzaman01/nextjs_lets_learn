@@ -17,9 +17,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ManualLogin } from "@/app/action";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { authClient } from "@/auth-client";
 
 export default function SignIn() {
   const router = useRouter();
@@ -28,10 +28,21 @@ export default function SignIn() {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const response = await ManualLogin(formData);
-    if (response) {
-      toast.success("Login successful!!!");
-      router.push("/");
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const userData = { email, password };
+
+    try {
+      const { error } = await authClient.signIn.email(userData);
+
+      if (!error) {
+        toast.success("Login successful!!!");
+        router.push("/");
+      } else {
+        toast.error(error.message);
+      }
+    } catch (error) {
+      throw new Error(error?.message);
     }
   };
 

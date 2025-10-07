@@ -6,10 +6,17 @@ import EnrollNow from "@/components/enroll_now";
 import { auth } from "@/auth";
 import { getAUserByEmail } from "@/queries/user-queries";
 import { isAlreadyEnrolled } from "@/queries/enrollment-queries";
+import { headers } from "next/headers";
 
 export default async function CourseCard({ course }) {
   const { title, id, price, thumbnail, category, modules } = course || {};
-  const { user } = (await auth()) || {};
+  const headerlist = await headers();
+  const { user } =
+    (await auth.api.getSession({
+      headers: {
+        cookie: headerlist.get("cookie") || "",
+      },
+    })) || {};
   let loggedInUser, isEnrolled;
   if (user) {
     loggedInUser = await getAUserByEmail(user?.email);

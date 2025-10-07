@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { MobileNav } from "@/components/mobile-nav";
@@ -13,21 +13,24 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Logo } from "./logo";
-import { signOut, useSession } from "next-auth/react";
+import { authClient, signOut } from "@/auth-client";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { toast } from "sonner";
 
-export function MainNav({ items, children }) {
-  const session = useSession();
+export function MainNav({ items }) {
+  const { data: session, error, isPending } = authClient.useSession();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState({});
+  const router = useRouter();
 
-  useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/me");
-      const data = await res.json();
-      setLoggedInUser(data);
-    })();
-  }, []);
+  if (error) {
+    router.push("/login");
+    toast.error(error.message);
+  }
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/");
+  };
 
   return (
     <>
@@ -52,14 +55,53 @@ export function MainNav({ items, children }) {
         ) : null}
 
         {showMobileMenu && items && (
-          <MobileNav session={session} items={items}>
-            {children}
-          </MobileNav>
+          <MobileNav session={session} items={items} />
         )}
       </div>
-      {session?.status !== "loading" && (
+      {!isPending && (
         <nav className="flex items-center gap-3">
-          {!session?.data ? (
+          {session ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="cursor-pointer">
+                  {session?.user?.profilePicture ? (
+                    <Image
+                      alt={
+                        session?.user?.firstName + " " + session?.user?.lastName
+                      }
+                      className="w-[40px] h-[40px] rounded-full border border-black"
+                      src={session?.user?.profilePicture}
+                      height={40}
+                      width={40}
+                    />
+                  ) : (
+                    <CircleUserRound className="w-[40px] h-[40px]" />
+                  )}
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 mt-4">
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                  <Link href="/my-profile">Profile</Link>
+                </DropdownMenuItem>
+                {session?.user?.role == "instructor" && (
+                  <DropdownMenuItem className="cursor-pointer" asChild>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                  <Link href="/my-profile/enrolled-courses">My Courses</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                  <Link href="">Testimonials & Certificates</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                  <Link href="#" onClick={handleSignOut}>
+                    Logout
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
             <div className="items-center gap-3 hidden lg:flex">
               <Link
                 href="/login"
@@ -83,47 +125,6 @@ export function MainNav({ items, children }) {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="cursor-pointer">
-                  {loggedInUser?.profilePicture ? (
-                    <Image
-                      alt={
-                        loggedInUser?.firstName + " " + loggedInUser?.lastName
-                      }
-                      className="w-[40px] h-[40px] rounded-full border border-black"
-                      src={loggedInUser?.profilePicture}
-                      height={40}
-                      width={40}
-                    />
-                  ) : (
-                    <CircleUserRound className="w-[40px] h-[40px]" />
-                  )}
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 mt-4">
-                <DropdownMenuItem className="cursor-pointer" asChild>
-                  <Link href="/my-profile">Profile</Link>
-                </DropdownMenuItem>
-                {loggedInUser?.role == "instructor" && (
-                  <DropdownMenuItem className="cursor-pointer" asChild>
-                    <Link href="/dashboard">Dashboard</Link>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuItem className="cursor-pointer" asChild>
-                  <Link href="/my-profile/enrolled-courses">My Courses</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer" asChild>
-                  <Link href="">Testimonials & Certificates</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer" asChild>
-                  <Link href="#" onClick={signOut}>
-                    Logout
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           )}
           <button
             className="flex items-center space-x-2 lg:hidden"
