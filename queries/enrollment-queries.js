@@ -4,8 +4,10 @@ import { Course } from "@/models/course-model";
 import { Enrollment } from "@/models/enrollment-model";
 import { User } from "@/models/user-model";
 import { getAReport } from "./report-queries";
+import { dbConnect } from "@/service/mongo";
 
 export const getEnrollmentsByCourseId = async (courseId) => {
+  await dbConnect();
   const enrollments = await Enrollment.find({ course: courseId })
     .populate({
       path: "course",
@@ -17,6 +19,7 @@ export const getEnrollmentsByCourseId = async (courseId) => {
 };
 
 export const getEnrollmentByStudentId = async (studentId) => {
+  await dbConnect();
   const enrollment = await Enrollment.find({ student: studentId })
     .populate({
       path: "course",
@@ -35,6 +38,7 @@ export const getEnrollmentByStudentId = async (studentId) => {
 };
 
 export const isAlreadyEnrolled = async (course, student) => {
+  await dbConnect();
   try {
     const result = await Enrollment.findOne({ course, student });
     return !!result;
@@ -44,6 +48,7 @@ export const isAlreadyEnrolled = async (course, student) => {
 };
 
 export const addEnrollment = async (student, course, transactionId, method) => {
+  await dbConnect();
   const enrollmentData = {
     student,
     course,
@@ -62,6 +67,7 @@ export const addEnrollment = async (student, course, transactionId, method) => {
 };
 
 export const getEnrollmentStat = async (filter) => {
+  await dbConnect();
   const enrollments = await Enrollment.find(filter)
     .populate({
       path: "course",

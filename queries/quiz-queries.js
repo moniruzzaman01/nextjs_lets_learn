@@ -4,8 +4,10 @@ import {
 } from "@/lib/convertData";
 import { Quiz } from "@/models/quiz-model";
 import { Quizset } from "@/models/quizset-model";
+import { dbConnect } from "@/service/mongo";
 
 export const getAllQuizsets = async (isPublished) => {
+  await dbConnect();
   try {
     let quizsets;
     if (isPublished)
@@ -18,6 +20,7 @@ export const getAllQuizsets = async (isPublished) => {
 };
 
 export const getQuizzesByQuizsetId = async (quizsetId) => {
+  await dbConnect();
   try {
     const quizzes = await Quizset.findById(quizsetId)
       .populate({

@@ -7,20 +7,12 @@ const db = client.db();
 
 export const auth = betterAuth({
   database: mongodbAdapter(db, {
-    // Optional: if you don't provide a client, database transactions won't be enabled.
     client,
-    collections: {
-      user: "my_users222",
-      session: "my_sessions",
-      account: "my_accounts",
-      verification: "my_verifications",
-    },
   }),
   emailAndPassword: {
     enabled: true,
   },
   user: {
-    // Define additional fields
     additionalFields: {
       firstName: {
         type: "string",
