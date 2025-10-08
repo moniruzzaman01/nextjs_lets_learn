@@ -10,7 +10,7 @@ export const updateAUserByEmail = async (userInfo) => {
 
   try {
     const response = await mongoose.connection.db
-      .collection("user")
+      ?.collection("user")
       .findOneAndUpdate(query, { $set: userInfo }, { returnDocument: "after" });
 
     return JSON.parse(JSON.stringify(response));
@@ -34,7 +34,7 @@ export const updatePassword = async (email, passwords) => {
 export const updateContactInfo = async (email, contactInfo) => {
   try {
     const response = await mongoose.connection.db
-      .collection("user")
+      ?.collection("user")
       .findOneAndUpdate(
         { email },
         { $set: contactInfo },

@@ -1,8 +1,10 @@
 import { replaceMongoIdInObject } from "@/lib/convertData";
 import { Assessment } from "@/models/assessment-model";
 import { Report } from "@/models/report-model";
+import { dbConnect } from "@/service/mongo";
 
 export const getAReport = async (query) => {
+  await dbConnect();
   const report = await Report.findOne(query)
     .populate({
       path: "quizAssessment",

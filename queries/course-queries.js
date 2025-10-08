@@ -8,8 +8,10 @@ import { Module } from "@/models/module-model";
 import { Testimonial } from "@/models/testimonial-model";
 import { User } from "@/models/user-model";
 import { getEnrollmentsByCourseId } from "./enrollment-queries";
+import { dbConnect } from "@/service/mongo";
 
 export async function getAllCourses() {
+  await dbConnect();
   const courses = await Course.find({ isPublished: true })
     .select([
       "title",
@@ -41,6 +43,7 @@ export async function getAllCourses() {
 }
 
 export async function getACourse(courseId) {
+  await dbConnect();
   const courses = await Course.findById(courseId)
     .populate({
       path: "category",
@@ -67,6 +70,7 @@ export async function getACourse(courseId) {
 }
 
 export async function getCoursesByInstructorId(instructorId) {
+  await dbConnect();
   const courses = await Course.find({ instructor: instructorId })
     .populate({
       path: "testimonials",
@@ -116,6 +120,7 @@ export async function getCoursesByInstructorId(instructorId) {
 }
 
 export async function getCoursesDataByInstructorId(instructorId) {
+  await dbConnect();
   const courses = await Course.find({ instructor: instructorId })
     .select("-__v -createdAt -updatedAt")
     .lean();

@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import { replaceMongoIdInArray } from "@/lib/convertData";
 import { Testimonial } from "@/models/testimonial-model";
+import { dbConnect } from "@/service/mongo";
 // import { User } from "@/models/user-model";
 // import { Course } from "@/models/course-model";
 
 export const getTestimonialsByCourseId = async (course) => {
+  await dbConnect();
   //   const testimonials = await Testimonial.find({ course })
   //     .populate({
   //       path: "course",

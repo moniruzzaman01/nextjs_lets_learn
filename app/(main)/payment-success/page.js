@@ -6,13 +6,20 @@ import { getACourse } from "@/queries/course-queries";
 import { addEnrollment } from "@/queries/enrollment-queries";
 import { getAUserByEmail } from "@/queries/user-queries";
 import { CircleCheck, CircleX } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 const SuccessPayment = async ({ searchParams }) => {
   const { session_id, courseId } = await searchParams;
-  const userSession = await auth();
-  if (!userSession?.user?.email) {
+  const headerlist = await headers();
+  const { user } = await auth.api.getSession({
+    headers: {
+      cookie: headerlist.get("cookie") || {},
+    },
+  });
+
+  if (!user?.email) {
     return redirect("/login");
   }
   if (!session_id) {
@@ -32,7 +39,7 @@ const SuccessPayment = async ({ searchParams }) => {
   });
   //get user and course data from the db
   const course = await getACourse(courseId);
-  const student = await getAUserByEmail(userSession?.user?.email);
+  const student = await getAUserByEmail(user?.email);
 
   //store user and course info in variable for use
   const courseTitle = course?.title;
