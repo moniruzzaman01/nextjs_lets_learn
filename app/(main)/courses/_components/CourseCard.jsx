@@ -17,6 +17,7 @@ export default async function CourseCard({ course }) {
         cookie: headerlist.get("cookie") || "",
       },
     })) || {};
+
   let loggedInUser, isEnrolled;
   if (user) {
     loggedInUser = await getAUserByEmail(user?.email);
@@ -27,7 +28,16 @@ export default async function CourseCard({ course }) {
     <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
       <Link key={id} href={`/courses/${id}`}>
         <div className="relative w-full aspect-video rounded-md overflow-hidden">
-          <Image src={thumbnail} alt={"course"} className="object-cover" fill />
+          {thumbnail ? (
+            <Image
+              src={thumbnail}
+              alt={"course"}
+              className="object-cover"
+              fill
+            />
+          ) : (
+            "No image found!"
+          )}
         </div>
         <div className="flex flex-col pt-2">
           <div className="text-lg md:text-base font-medium group-hover:text-sky-700 line-clamp-2">

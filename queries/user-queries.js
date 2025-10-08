@@ -23,3 +23,8 @@ export const getAUserById = async (id) => {
     throw new Error(error.message);
   }
 };
+
+export const getAllUser = async () => {
+  const user = await User.find({});
+  return user;
+};
