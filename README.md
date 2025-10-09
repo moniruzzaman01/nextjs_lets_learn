@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Let's Learn - EdTech Platform
 
-## Getting Started
+A full-stack educational technology platform that connects students and instructors in an interactive learning environment.
 
-First, run the development server:
+## 🚀 Live Demo
+
+- **Live Site**: [Go Live](https://nextjs-lets-learn.vercel.app)
+- **Full Stack Code**: [Read Code](https://github.com/moniruzzaman01/nextjs_lets_learn)
+
+## 📖 About The Project
+
+Let's Learn is a comprehensive edtech platform designed to facilitate online learning and teaching. The platform provides separate experiences for students and instructors, enabling seamless course creation, enrollment, and learning management.
+
+### 🎯 Key Features
+
+**👥 User Management**
+
+- Role-based authentication (Student/Instructor)
+- Secure registration and login using Better Auth
+- Email/password and social login options
+- Profile management for both roles
+
+**🎓 Student Features**
+
+- Browse and search available courses
+- Course enrollment and purchase system
+- Access to module videos and learning materials
+- Interactive quiz system for knowledge assessment
+- Progress tracking and course completion (upcoming)
+
+**👨‍🏫 Instructor Features**
+
+- Course creation and management
+- Module and content organization
+- Quiz creation and management
+- Comprehensive analytics dashboard
+- Revenue and enrollment tracking
+- Student reviews and feedback system
+
+**💳 Payment & Transactions**
+
+- Secure payment processing with Stripe
+- Course purchase and enrollment system
+- Revenue management for instructors
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+
+- [Next.js](https://nextjs.org/docs/app) 15.3.4 (App Router)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Shadcn/ui](https://ui.shadcn.com) components
+
+**Backend:**
+
+- [Next.js](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) API Routes
+- [Better Auth](https://www.better-auth.com) (Authentication)
+- [Stripe](https://stripe.com) (Payments)
+
+**Database:**
+
+- [MongoDB](http://mongodb.com)
+- [Mongoose ODM](https://mongoosejs.com)
+
+**Deployment:**
+
+- [Vercel](https://vercel.com)
+
+## 📦 Installation
+
+[Installation instructions will be added here]
 
 ```bash
+# Example format - update with your actual commands
+git clone https://github.com/moniruzzaman01/nextjs_lets_learn.git
+
+cd nextjs_lets_learn
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
