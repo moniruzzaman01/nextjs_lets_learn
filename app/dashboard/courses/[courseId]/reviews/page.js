@@ -4,10 +4,17 @@ import DataTable from "./_components/DataTable";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getAUserByEmail } from "@/queries/user-queries";
+import { headers } from "next/headers";
 
 export default async function TestimonialPage({ params }) {
   const { courseId } = await params;
-  const { user } = await auth();
+  const headerlist = await headers();
+  const { user } =
+    (await auth.api.getSession({
+      headers: {
+        cookie: headerlist.get("cookie") || {},
+      },
+    })) || {};
   if (!user) redirect("/login");
   const loggedInUser = await getAUserByEmail(user?.email);
   if (loggedInUser?.role != "instructor") redirect("/forbidden-page");

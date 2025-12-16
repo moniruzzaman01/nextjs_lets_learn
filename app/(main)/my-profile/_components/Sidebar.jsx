@@ -1,11 +1,10 @@
 import Image from "next/image";
-import { CircleUserRound, LogOut } from "lucide-react";
+import { CircleUserRound } from "lucide-react";
 import ProfileMenu from "./ProfileMenu";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getAUserByEmail } from "@/queries/user-queries";
 import { headers } from "next/headers";
-import { signOut } from "@/auth-client";
 import Logout from "./Logout";
 
 export default async function Sidebar() {

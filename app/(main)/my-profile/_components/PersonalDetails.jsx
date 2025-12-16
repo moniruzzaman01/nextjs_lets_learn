@@ -9,6 +9,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export default function PersonalDetails({ loggedInUser }) {
+  //state managements
   const [userInfo, setUserInfo] = useState({
     firstName: loggedInUser?.firstName || "",
     lastName: loggedInUser?.lastName || "",
@@ -16,7 +17,7 @@ export default function PersonalDetails({ loggedInUser }) {
     bio: loggedInUser?.bio || "",
     designation: loggedInUser?.designation || "",
   });
-
+  //changing the form informations
   const handleChange = (event) => {
     const property = event.target.name;
     const value = event.target.value;
@@ -26,7 +27,7 @@ export default function PersonalDetails({ loggedInUser }) {
       [property]: value,
     });
   };
-
+  //handle update user info
   const handleSubmit = async (event) => {
     event.preventDefault();
 

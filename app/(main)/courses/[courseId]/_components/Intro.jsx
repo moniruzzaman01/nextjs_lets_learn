@@ -7,11 +7,18 @@ import { isAlreadyEnrolled } from "@/queries/enrollment-queries";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getAUserByEmail } from "@/queries/user-queries";
+import { headers } from "next/headers";
 
 export default async function Intro({ course }) {
-  const { user } = await auth();
-  if (!user) {
-    redirect("/login");
+  const headerlist = await headers();
+  const { user } =
+    (await auth.api.getSession({
+      headers: {
+        cookie: headerlist.get("cookie") || "",
+      },
+    })) || {};
+  if (!user?.email) {
+    return redirect("/login");
   }
   const { title, subtitle, thumbnail, id, price } = course || {};
   const loggedInUser = await getAUserByEmail(user?.email);

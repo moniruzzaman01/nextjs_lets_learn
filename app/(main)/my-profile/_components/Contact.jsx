@@ -40,7 +40,7 @@ export default function Contact({ loggedInUser }) {
             <Input
               name="phone"
               id="phone"
-              type="number"
+              type="text"
               placeholder="+8801XXXXXXXXX"
               value={contactInfo?.phone}
               onChange={handleChange}
@@ -52,7 +52,7 @@ export default function Contact({ loggedInUser }) {
               name="socialMedia"
               id="socialMedia"
               type="text"
-              placeholder="https://www.facebook.com/xxxx.x"
+              placeholder="https://www.facebook.com/m.zaman.shakib"
               value={contactInfo?.socialMedia}
               onChange={handleChange}
             />
