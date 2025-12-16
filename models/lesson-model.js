@@ -10,6 +10,7 @@ const lessonSchema = new Schema({
   },
   duration: {
     type: Number,
+    default: 0,
   },
   video_url: {
     type: String,

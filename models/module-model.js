@@ -25,9 +25,6 @@ const moduleSchema = new Schema({
     ref: "Lesson",
     type: [Schema.ObjectId],
   },
-  duration: {
-    type: Number,
-  },
   order: {
     required: true,
     type: Number,

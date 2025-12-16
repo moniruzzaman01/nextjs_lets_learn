@@ -22,7 +22,6 @@ export default async function EnrolledCourses() {
   }
   const loggedInUser = await getAUserByEmail(user?.email);
   const enrollments = await getEnrollmentByStudentId(loggedInUser?.id);
-
   return (
     <div className="min-h-[60vh] flex flex-col justify-center">
       {enrollments && enrollments.length > 0 ? (
@@ -41,7 +40,9 @@ export default async function EnrolledCourses() {
               {loggedInUser?.firstName} {loggedInUser?.lastName}
             </b>
             <br />
-            We are so sorry that we don&apos;t have any Enrollment data for you!
+            We are so sorry that we don&apos;t have any{" "}
+            {loggedInUser?.role == "student" ? "Enrollment" : "Course"} data for
+            you!
           </h1>
           <div className="flex justify-center">
             <Button asChild size="sm">

@@ -69,7 +69,11 @@ export default async function Intro({ course }) {
                     className="w-full rounded-lg"
                     width={768}
                     height={463}
-                    src={thumbnail}
+                    src={
+                      thumbnail
+                        ? thumbnail
+                        : "https://i.ibb.co.com/39GW4q16/course.png"
+                    }
                     alt={title}
                     unoptimized
                   />

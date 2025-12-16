@@ -9,6 +9,7 @@ import { Testimonial } from "@/models/testimonial-model";
 import { User } from "@/models/user-model";
 import { getEnrollmentsByCourseId } from "./enrollment-queries";
 import { dbConnect } from "@/service/mongo";
+import { Lesson } from "@/models/lesson-model";
 
 export async function getAllCourses() {
   await dbConnect();
@@ -64,6 +65,11 @@ export async function getACourse(courseId) {
     .populate({
       path: "modules",
       model: Module,
+      populate: {
+        path: "lessonIds",
+        model: Lesson,
+        select: "duration",
+      },
     })
     .lean();
   return replaceMongoIdInObject(courses);
