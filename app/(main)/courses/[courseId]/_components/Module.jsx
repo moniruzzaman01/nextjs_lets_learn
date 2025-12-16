@@ -12,13 +12,13 @@ export default function Module({ module }) {
 
   return (
     <AccordionItem className="border-none" value={title}>
-      <AccordionTrigger className=" bg-slate-100 p-2">{title}</AccordionTrigger>
+      <AccordionTrigger className=" bg-gray-100 p-2">{title}</AccordionTrigger>
       <AccordionContent>
         {/* Lessons */}
         {lessonIds && (
           <Accordion type="multiple" collapsible="true">
             <AccordionItem className="border-none" value="item-1">
-              <AccordionTrigger className=" bg-slate-50 py-2 pl-4 mb-1">
+              <AccordionTrigger className=" bg-slate-50 py-2 pl-4 mb-1 mt-1">
                 <span className="flex items-center gap-1.5">
                   <Video className="w-4 h-4" />
                   {lessonIds?.length} Lessons
@@ -37,7 +37,7 @@ export default function Module({ module }) {
         {/* Notes */}
         <Accordion type="multiple" collapsible="true">
           <AccordionItem className="border-none" value="item-2">
-            <AccordionTrigger className=" bg-slate-50 py-2 pl-4">
+            <AccordionTrigger className=" bg-slate-50 py-2 pl-4 mb-1">
               <span className="flex items-center gap-1.5">
                 <NotepadText className="w-4 h-4" />
                 10 Notes
@@ -49,7 +49,7 @@ export default function Module({ module }) {
         {/* Quiz */}
         <Accordion type="multiple" collapsible="true">
           <AccordionItem className="border-none" value="item-2">
-            <AccordionTrigger className=" bg-slate-50 py-2 pl-4">
+            <AccordionTrigger className=" bg-slate-50 py-2 pl-4 mb-1">
               <span className="flex items-center gap-1.5">
                 <FileQuestion className="w-4 h-4" />
                 10 Quiz
@@ -61,7 +61,7 @@ export default function Module({ module }) {
         {/* Live Classes */}
         <Accordion type="multiple" collapsible="true">
           <AccordionItem className="border-none" value="item-2">
-            <AccordionTrigger className=" bg-slate-50 py-2 pl-4">
+            <AccordionTrigger className=" bg-slate-50 py-2 pl-4 mb-1">
               <span className="flex items-center gap-1.5">
                 <Radio className="w-4 h-4" />1 Live Class
               </span>
