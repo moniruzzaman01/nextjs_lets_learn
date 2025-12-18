@@ -1,6 +1,7 @@
+import { CourseProgress } from "@/components/course-progress";
 import { Badge } from "@/components/ui/badge";
 import { getAReport } from "@/queries/report-queries";
-import { BookOpen } from "lucide-react";
+import { BookOpen, BookOpenCheck } from "lucide-react";
 import Image from "next/image";
 
 export default async function EnrolledCourseCard({ enrollment }) {
@@ -16,7 +17,7 @@ export default async function EnrolledCourseCard({ enrollment }) {
   } = enrollment || {};
 
   const {
-    // totalCompletedLessons,
+    totalCompletedLessons,
     totalCompletedModules,
     quizAssessment: { otherMarks } = {},
     totalQuiz,
@@ -26,7 +27,8 @@ export default async function EnrolledCourseCard({ enrollment }) {
     course: courseId,
     student: studentId,
   })) || {};
-
+  const value =
+    ((totalCompletedModules?.length || 1) / (modules?.length || 0)) * 100;
   return (
     <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
       <div className="relative w-full aspect-video rounded-md overflow-hidden">
@@ -37,31 +39,36 @@ export default async function EnrolledCourseCard({ enrollment }) {
           {title}
         </div>
         <p className="text-xs text-muted-foreground">{categoryTitle}</p>
-        <div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
+        <div className="my-3 flex items-center justify-between gap-x-2 text-sm md:text-xs">
           <div className="flex items-center gap-x-1 text-slate-500">
             <div>
               <BookOpen className="w-4" />
             </div>
-            <span>{modules?.length} Chapters</span>
+            <span>{modules?.length} Modules</span>
+          </div>
+          <div className="flex items-center gap-x-1 text-slate-500">
+            <div>
+              <BookOpenCheck className="w-4" />
+            </div>
+            <span>{totalCompletedModules?.length || 0} Modules</span>
           </div>
         </div>
         <div className=" border-b pb-2 mb-2">
           <div className="flex items-center justify-between">
             <div className="text-md md:text-sm font-medium text-slate-700">
-              Total Modules: <Badge variant="success">{modules?.length}</Badge>
+              Total Lessons: <Badge variant="success">{modules?.length}</Badge>
             </div>
             <div className="text-md md:text-sm font-medium text-slate-700">
-              Completed Modules:{" "}
-              <Badge variant="success">
-                {totalCompletedModules?.length || "-"}
-              </Badge>
+              Total Quizzes: <Badge variant="success">{totalQuiz || "-"}</Badge>
             </div>
           </div>
           <div className="flex items-center justify-between mt-2">
             <div className="text-md md:text-sm font-medium text-slate-700">
-              Total Quizzes: <Badge variant="success">{totalQuiz || "-"}</Badge>
+              Total Completed L:{" "}
+              <Badge variant="success">
+                {totalCompletedLessons?.length || 0}
+              </Badge>
             </div>
-
             <div className="text-md md:text-sm font-medium text-slate-700">
               Quiz Attempted:{" "}
               <Badge variant="success">{quizAttempted || "-"}</Badge>
@@ -106,6 +113,7 @@ export default async function EnrolledCourseCard({ enrollment }) {
           </p>
         </div>
       </div>
+      <CourseProgress value={value} />
     </div>
   );
 }
