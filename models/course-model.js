@@ -17,6 +17,7 @@ const courseSchema = new Schema(
     },
     thumbnail: {
       type: String,
+      default: "https://i.ibb.co.com/39GW4q16/course.png",
     },
     modules: [{ type: Schema.ObjectId, ref: Module }],
     price: {

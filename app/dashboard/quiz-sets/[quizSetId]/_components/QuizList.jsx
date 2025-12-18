@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Circle, CircleCheck, Pencil, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
+import { EditQuizForm } from "./EditQuizForm";
 
 export default function QuizList({ quiz, quizSetId }) {
+  const [isEditing, setIsEditing] = useState("");
   const router = useRouter();
 
   const handleDelete = async () => {
@@ -19,6 +22,10 @@ export default function QuizList({ quiz, quizSetId }) {
       throw new Error(`${error ? error.message : "Something went wrong!!!"}`);
     }
   };
+  const handleEdit = () => {};
+  if (isEditing == quiz._id) {
+    return <EditQuizForm quiz={quiz} setIsEditing={setIsEditing} />;
+  }
   return (
     <div className=" bg-gray-50 shadow-md p-4 lg:p-6 rounded-md border">
       <h2 className="mb-3">{quiz.question}</h2>
@@ -44,7 +51,11 @@ export default function QuizList({ quiz, quizSetId }) {
         })}
       </div>
       <div className="flex items-center justify-end gap-2 mt-6">
-        <Button variant="ghost" size="sm">
+        <Button
+          onClick={() => setIsEditing(quiz._id)}
+          variant="ghost"
+          size="sm"
+        >
           <Pencil className="w-3 mr-1" /> Edit
         </Button>
         <Button
