@@ -8,12 +8,12 @@ import { revalidatePath } from "next/cache";
 export const postAModule = async (moduleData) => {
   try {
     const insertResponse = await Module.create(moduleData);
-    const updateResponse = await Course.findByIdAndUpdate(
+    await Course.findByIdAndUpdate(
       moduleData.course,
       { $push: { modules: insertResponse._id } },
       { new: true }
     );
-    return JSON.parse(JSON.stringify(updateResponse));
+    return JSON.parse(JSON.stringify(insertResponse));
   } catch (error) {
     throw new Error(error);
   }
