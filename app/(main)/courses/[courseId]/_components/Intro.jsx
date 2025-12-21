@@ -42,7 +42,10 @@ export default async function Intro({ course }) {
 
               <div className="mt-6 flex items-center justify-center flex-wrap gap-3">
                 {isEnrolled ? (
-                  <Link href="#" className={cn(buttonVariants({ size: "lg" }))}>
+                  <Link
+                    href={`/courses/${id}/lessons`}
+                    className={cn(buttonVariants({ size: "lg" }))}
+                  >
                     Continue
                   </Link>
                 ) : (

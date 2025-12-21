@@ -68,7 +68,7 @@ export async function getACourse(courseId) {
       populate: {
         path: "lessonIds",
         model: Lesson,
-        select: "duration",
+        select: "duration title",
       },
     })
     .lean();
