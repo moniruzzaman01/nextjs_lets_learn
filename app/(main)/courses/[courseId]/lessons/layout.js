@@ -1,8 +1,26 @@
 import { CourseSidebarMobile } from "./_components/course-sidebar-mobile";
 import { CourseSidebar } from "./_components/course-sidebar";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { isAlreadyEnrolled } from "@/queries/enrollment-queries";
 
 const CourseLayout = async ({ children, params }) => {
   const { courseId } = await params;
+  const headerlist = await headers();
+  const { user } =
+    (await auth.api.getSession({
+      headers: {
+        cookie: headerlist.get("cookie") || "",
+      },
+    })) || {};
+  if (!user?.email) {
+    return redirect("/login");
+  }
+  const isEnrolled = await isAlreadyEnrolled(courseId, user.id);
+  if (!isEnrolled) {
+    return redirect(`/courses/${courseId}?reason=not-enrolled`);
+  }
 
   return (
     <div className="lg:flex">
