@@ -17,9 +17,7 @@ export default async function Intro({ course }) {
         cookie: headerlist.get("cookie") || "",
       },
     })) || {};
-  if (!user?.email) {
-    return redirect("/login");
-  }
+
   const { title, subtitle, thumbnail, id, price } = course || {};
   const loggedInUser = await getAUserByEmail(user?.email);
   const isEnrolled = await isAlreadyEnrolled(id, loggedInUser?.id);
@@ -41,24 +39,33 @@ export default async function Intro({ course }) {
               </p>
 
               <div className="mt-6 flex items-center justify-center flex-wrap gap-3">
-                {isEnrolled ? (
+                {user &&
+                  (isEnrolled ? (
+                    <Link
+                      href={`/courses/${id}/lessons`}
+                      className={cn(buttonVariants({ size: "lg" }))}
+                    >
+                      Continue
+                    </Link>
+                  ) : (
+                    <EnrollNow isButton={true} course={{ title, id, price }} />
+                  ))}
+                {!user && (
                   <Link
-                    href={`/courses/${id}/lessons`}
+                    href="/login"
                     className={cn(buttonVariants({ size: "lg" }))}
                   >
-                    Continue
+                    Login
                   </Link>
-                ) : (
-                  <EnrollNow isButton={true} course={{ title, id, price }} />
                 )}
-                <Link
+                {/* <Link
                   href="#"
                   className={cn(
                     buttonVariants({ variant: "outline", size: "lg" })
                   )}
                 >
                   See Intro
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
