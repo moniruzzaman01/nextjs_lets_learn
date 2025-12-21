@@ -43,7 +43,7 @@ export async function getAllCourses() {
   return replaceMongoIdInArray(courses);
 }
 
-export async function getACourse(courseId) {
+export async function getACourse(courseId, isPublished) {
   await dbConnect();
   const courses = await Course.findById(courseId)
     .populate({
@@ -65,10 +65,12 @@ export async function getACourse(courseId) {
     .populate({
       path: "modules",
       model: Module,
+      match: isPublished ? { isPublished: true } : {},
       populate: {
         path: "lessonIds",
         model: Lesson,
         select: "duration title",
+        match: isPublished ? isPublished : {},
       },
     })
     .lean();
