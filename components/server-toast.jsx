@@ -11,6 +11,8 @@ export function ServerToast() {
   useEffect(() => {
     if (reason === "not-enrolled") {
       toast.error("You haven't enrolled in this course!!!");
+    } else if (reason === "private-lesson") {
+      toast.error("This lesson is private!!!");
     }
   }, [reason]);
 

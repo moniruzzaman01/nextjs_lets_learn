@@ -1,96 +1,39 @@
+"use client";
+
 import {
-  AccordionContent,
+  Accordion,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { cn } from "@/lib/utils";
-import { PlayCircle } from "lucide-react";
+import { ServerToast } from "@/components/server-toast";
+import Lessons from "./Lessons";
+import { useSearchParams } from "next/navigation";
 
 export default function Modules({ modules = [] }) {
-  const isActive = true;
-  const isCompleted = true;
+  const searchParams = useSearchParams();
+  const lessonSlug = searchParams.get("lesson");
+  const selectedModule = modules.find((module) => {
+    return module.lessonIds.find((lesson) => lesson.slug == lessonSlug);
+  });
 
   return (
     <>
-      {modules.map((module, idx) => (
-        <AccordionItem className="border-0" value={module.title} key={idx}>
-          <AccordionTrigger>{module.title} </AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-col w-full gap-3">
-              {/* active and completed */}
-              {/* <button
-                          type="button"
-                          className={cn(
-                            "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
-                            isActive && "text-slate-700  hover:text-slate-700",
-                            isCompleted && "text-emerald-700 hover:text-emerald-700"
-                          )}
-                        >
-                          <div className="flex items-center gap-x-2">
-                            <CheckCircle
-                              size={16}
-                              className={cn(
-                                "text-slate-500",
-                                isActive && "text-slate-700",
-                                isCompleted && "text-emerald-700"
-                              )}
-                            />
-                            Introduction
-                          </div>
-                        </button> */}
-
-              {module.lessonIds?.length > 0 &&
-                module.lessonIds.map((lesson, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    className={cn(
-                      "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600 ",
-                      false && "text-slate-700  hover:text-slate-700",
-                      isCompleted &&
-                        false &&
-                        "text-emerald-700 hover:text-emerald-700"
-                    )}
-                  >
-                    <div className="flex items-center gap-x-2">
-                      <PlayCircle
-                        size={16}
-                        className={cn(
-                          "text-slate-500",
-                          isActive && "text-slate-700"
-                        )}
-                      />
-                      {lesson.title}
-                    </div>
-                  </button>
-                ))}
-
-              {/* lock*/}
-              {/* <button
-                          type="button"
-                          className={cn(
-                            "flex items-center gap-x-2 text-slate-500 text-sm font-[500]  transition-all hover:text-slate-600",
-                            false && "text-slate-700  hover:text-slate-700",
-                            isCompleted &&
-                              false &&
-                              "text-emerald-700 hover:text-emerald-700"
-                          )}
-                        >
-                          <div className="flex items-center gap-x-2">
-                            <Lock
-                              size={16}
-                              className={cn(
-                                "text-slate-500",
-                                isActive && "text-slate-700"
-                              )}
-                            />
-                            What is React ?
-                          </div>
-                        </button> */}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      ))}
+      <Accordion
+        defaultValue={
+          selectedModule ? [selectedModule.title] : [modules[0].title]
+        }
+        type="multiple"
+        collapsible="true"
+        className="w-full pl-6"
+      >
+        {modules.map((module, idx) => (
+          <AccordionItem key={idx} className="border-0" value={module.title}>
+            <AccordionTrigger>{module.title} </AccordionTrigger>
+            <Lessons module={module} />
+          </AccordionItem>
+        ))}
+      </Accordion>
+      <ServerToast />
     </>
   );
 }

@@ -69,7 +69,7 @@ export async function getACourse(courseId, isPublished) {
       populate: {
         path: "lessonIds",
         model: Lesson,
-        select: "duration title",
+        select: "duration title isPublic slug",
         match: isPublished ? isPublished : {},
       },
     })
