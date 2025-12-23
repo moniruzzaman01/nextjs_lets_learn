@@ -4,11 +4,13 @@ import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { toast } from "sonner";
 import { postAViewInfo, updateAViewInfo } from "@/app/action/view-action";
+import { useRouter } from "next/navigation";
 
 export const VideoPlayer = ({ selectedLesson }) => {
   const [hasWindow, setHasWindow] = useState(false);
   const [isStart, setIsStart] = useState(false);
   const [isEnded, setIsEnded] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -35,6 +37,7 @@ export const VideoPlayer = ({ selectedLesson }) => {
         module: selectedLesson.moduleId,
         lesson: selectedLesson.lessonId,
       });
+      router.refresh();
       setIsEnded(true);
     } catch (error) {
       toast.error(error.message);
