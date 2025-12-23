@@ -2,13 +2,17 @@ import { Button } from "@/components/ui/button";
 import { VideoPlayer } from "./_components/video-player";
 import { Separator } from "@/components/ui/separator";
 import VideoDescription from "./_components/video-description";
+import { getACourse } from "@/queries/course-queries";
 
-const Course = () => {
+const Course = async ({ params }) => {
+  const { courseId } = await params;
+  const { modules } = await getACourse(courseId, true);
+
   return (
     <div>
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
         <div className="p-4 w-full">
-          <VideoPlayer />
+          <VideoPlayer modules={JSON.parse(JSON.stringify(modules))} />
         </div>
         <div>
           <div className="p-4 flex flex-col md:flex-row items-center justify-between">
