@@ -7,7 +7,7 @@ const viewsSchema = new Schema(
   {
     state: {
       type: String,
-      required: true,
+      default: "",
     },
     user: {
       type: Schema.ObjectId,

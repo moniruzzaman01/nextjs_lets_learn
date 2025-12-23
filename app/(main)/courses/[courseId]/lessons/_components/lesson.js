@@ -2,11 +2,13 @@ import { cn } from "@/lib/utils";
 import { CheckCircle, PlayCircle, Lock } from "lucide-react";
 import Link from "next/link";
 
-export default function Lesson({ lesson }) {
+export default function Lesson({ lesson, moduleSlug }) {
   return (
     <Link
       href={
-        lesson.isPublic ? `?lesson=${lesson.slug}` : "?reason=private-lesson"
+        lesson.isPublic
+          ? `?lesson=${lesson.slug}&module=${moduleSlug}`
+          : "?reason=private-lesson"
       }
       type="button"
       className={cn(

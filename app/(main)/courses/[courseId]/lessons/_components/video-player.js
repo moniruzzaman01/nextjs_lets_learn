@@ -2,31 +2,59 @@
 
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
-import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { postAViewInfo, updateAViewInfo } from "@/app/action/view-action";
 
-export const VideoPlayer = ({ modules = [] }) => {
+export const VideoPlayer = ({ selectedLesson }) => {
   const [hasWindow, setHasWindow] = useState(false);
-  const searchParams = useSearchParams();
-  const lessonSlug = searchParams.get("lesson");
-  const flattenModule = modules.flatMap((module) => module.lessonIds);
-  const targetLesson =
-    flattenModule.find((lesson) => lesson.slug == lessonSlug) ||
-    flattenModule[0] ||
-    {};
+  const [isStart, setIsStart] = useState(false);
+  const [isEnded, setIsEnded] = useState(false);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       setHasWindow(true);
     }
   }, []);
 
+  const handleOnStart = async () => {
+    if (isStart) return;
+    try {
+      await postAViewInfo({
+        module: selectedLesson.moduleId,
+        lesson: selectedLesson.lessonId,
+      });
+      setIsStart(true);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  const handleOnEnded = async () => {
+    if (isEnded) return;
+    try {
+      await updateAViewInfo({
+        module: selectedLesson.moduleId,
+        lesson: selectedLesson.lessonId,
+      });
+      setIsEnded(true);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  const handleOnDurationChange = async (duration) => {};
+  const handleOnProgress = async (progress) => {};
+
   return (
     <div className=" h-full w-full">
       {hasWindow && (
         <ReactPlayer
-          src={targetLesson.video_url}
+          src={selectedLesson?.video_url}
           width="100%"
           height="480px"
           controls
+          onStart={handleOnStart}
+          onEnded={handleOnEnded}
+          onDurationChange={handleOnDurationChange}
+          onProgress={handleOnProgress}
         />
       )}
     </div>
