@@ -1,3 +1,4 @@
+import { postAReport } from "@/app/action/report-action";
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { sendEmails } from "@/lib/sendEmails";
@@ -88,6 +89,7 @@ const SuccessPayment = async ({ searchParams }) => {
         throw new Error("Email sending failed!!!");
       }
     }
+    await postAReport({ course: courseId, student: user.id });
   }
 
   return (
@@ -115,7 +117,7 @@ const SuccessPayment = async ({ searchParams }) => {
             <Link href="/courses">Browse Courses</Link>
           </Button>
           <Button asChild variant="outline" size="sm">
-            <Link href="#">Play Course</Link>
+            <Link href={`/courses/${courseId}/lessons`}>Play Course</Link>
           </Button>
         </div>
       </div>
