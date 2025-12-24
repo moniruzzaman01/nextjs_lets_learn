@@ -5,6 +5,7 @@ import Modules from "./modules";
 import { View } from "@/models/views-model";
 import { headers } from "next/headers";
 import { auth } from "@/auth";
+import { getAReport } from "@/queries/report-queries";
 
 export const CourseSidebar = async ({ courseId }) => {
   const headerlist = await headers();
@@ -37,13 +38,20 @@ export const CourseSidebar = async ({ courseId }) => {
       return module;
     })
   );
+  const totalLessons =
+    modules.flatMap((module) => module.lessonIds)?.length || 0;
+  const report = await getAReport({
+    course: courseId,
+    student: user.id,
+  });
+  const lessonCompleted = report?.totalCompletedLessons?.length ?? 0;
 
   return (
     <>
       <div className="h-full border-r flex flex-col overflow-y-auto shadow-sm">
         <div className="p-6 pt-10 lg:pt-6 flex flex-col border-b gap-y-5">
           <h1 className="font-semibold capitalize">{course?.title}</h1>
-          <CourseProgress value={80} />
+          <CourseProgress value={(lessonCompleted / totalLessons) * 100} />
         </div>
         <Modules modules={JSON.parse(JSON.stringify(structuredModules))} />
         <Button className=" w-[85%] mx-auto my-6">Download Certificate</Button>
