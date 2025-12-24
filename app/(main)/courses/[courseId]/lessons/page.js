@@ -24,7 +24,7 @@ const Course = async ({ params, searchParams }) => {
     <div>
       <div className="flex flex-col max-w-4xl mx-auto pb-20">
         <div className="p-4 w-full">
-          <VideoPlayer selectedLesson={selectedLesson} />
+          <VideoPlayer selectedLesson={selectedLesson} courseId={courseId} />
         </div>
         <div>
           <div className="p-4 flex flex-col md:flex-row items-center justify-between">

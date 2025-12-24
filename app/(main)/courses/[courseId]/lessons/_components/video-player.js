@@ -5,8 +5,9 @@ import ReactPlayer from "react-player";
 import { toast } from "sonner";
 import { postAViewInfo, updateAViewInfo } from "@/app/action/view-action";
 import { useRouter } from "next/navigation";
+import { updateAReport } from "@/app/action/report-action";
 
-export const VideoPlayer = ({ selectedLesson }) => {
+export const VideoPlayer = ({ selectedLesson, courseId }) => {
   const [hasWindow, setHasWindow] = useState(false);
   const [isStart, setIsStart] = useState(false);
   const [isEnded, setIsEnded] = useState(false);
@@ -37,6 +38,11 @@ export const VideoPlayer = ({ selectedLesson }) => {
         module: selectedLesson.moduleId,
         lesson: selectedLesson.lessonId,
       });
+      const result = await updateAReport({
+        courseId,
+        lessonId: selectedLesson.lessonId,
+      });
+      console.log("-----result", result);
       router.refresh();
       setIsEnded(true);
     } catch (error) {
