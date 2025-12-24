@@ -70,7 +70,7 @@ export async function getACourse(courseId, isPublished) {
         path: "lessonIds",
         model: Lesson,
         select: "duration title isPublic slug video_url",
-        match: isPublished ? isPublished : {},
+        match: isPublished ? { isPublished: true } : {},
       },
     })
     .lean();
