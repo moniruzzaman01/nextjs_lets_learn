@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { Report } from "@/models/report-model";
+import { getAModule } from "@/queries/module-queries";
 import { headers } from "next/headers";
 
 export const postAReport = async (reportData) => {
@@ -29,8 +30,8 @@ export const updateAReport = async (updatedReportInfo) => {
       student: user.id,
     };
 
-    const isExist = await Report.findOne(query);
-    if (!isExist) {
+    const isReportExist = await Report.findOne(query);
+    if (!isReportExist) {
       const report = await Report.create({
         course: updatedReportInfo.courseId,
         student: user.id,
@@ -38,14 +39,31 @@ export const updateAReport = async (updatedReportInfo) => {
       });
       return JSON.parse(JSON.stringify(report));
     } else {
-      const isExist = await Report.findOne({
+      const isLessonExist = await Report.findOne({
         ...query,
         totalCompletedLessons: updatedReportInfo.lessonId,
       });
-      if (isExist) return null;
+      if (isLessonExist) return null;
       const report = await Report.updateOne(query, {
         $addToSet: { totalCompletedLessons: updatedReportInfo.lessonId },
       });
+      if (report?.modifiedCount) {
+        isReportExist.totalCompletedLessons.push(updatedReportInfo.lessonId);
+        const module = await getAModule(updatedReportInfo.moduleId);
+        const lessonsInModule = module.lessonIds.map((lesson) => lesson._id);
+        const lessonsCompleted = isReportExist.totalCompletedLessons;
+        const isModuleComplete = lessonsInModule.every((item) =>
+          lessonsCompleted.includes(item)
+        );
+        if (isModuleComplete) {
+          await Report.updateOne(query, {
+            $addToSet: {
+              totalCompletedModules: updatedReportInfo.moduleId,
+            },
+          });
+        }
+      }
+
       return JSON.parse(JSON.stringify(report));
     }
   } catch (error) {

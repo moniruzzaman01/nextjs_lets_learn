@@ -38,11 +38,11 @@ export const VideoPlayer = ({ selectedLesson, courseId }) => {
         module: selectedLesson.moduleId,
         lesson: selectedLesson.lessonId,
       });
-      const result = await updateAReport({
+      await updateAReport({
         courseId,
         lessonId: selectedLesson.lessonId,
+        moduleId: selectedLesson.moduleId,
       });
-      console.log("-----result", result);
       router.refresh();
       setIsEnded(true);
     } catch (error) {

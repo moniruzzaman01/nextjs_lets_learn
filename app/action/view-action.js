@@ -20,9 +20,9 @@ export const postAViewInfo = async (viewInfo) => {
     const moduleId = viewInfo.module;
 
     const query = {
-      user: new mongoose.Types.ObjectId(userId),
-      lesson: new mongoose.Types.ObjectId(lessonId),
-      module: new mongoose.Types.ObjectId(moduleId),
+      user: userId,
+      lesson: lessonId,
+      module: moduleId,
     };
     const isExist = await View.findOne(query).lean();
     if (isExist) return null;
