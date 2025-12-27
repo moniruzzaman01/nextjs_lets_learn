@@ -1,15 +1,29 @@
+import {
+  ArrowLeft,
+  BookOpenCheck,
+  LayoutDashboard,
+  Lightbulb,
+} from "lucide-react";
 import AlertBanner from "@/components/alert-banner";
-import { ArrowLeft, BookOpenCheck, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import IconBadge from "@/components/icon-badge";
 import ModuleTitleForm from "./_components/ModuleTitleForm";
 import { getAModule } from "@/queries/module-queries";
 import LessonsForm from "./_components/LessonsForm";
 import ModuleActions from "./_components/ModuleActions";
+import { QuizForm } from "../../_components/QuizForm";
+import { getAllQuizsets } from "@/queries/quiz-queries";
 
 export default async function editModule({ params }) {
   const { courseId, moduleId } = await params;
   const courseModule = await getAModule(moduleId);
+  const quizsets = await getAllQuizsets(true);
+  const quizsetOptions = quizsets.map((quiz) => {
+    return {
+      value: quiz.id,
+      label: quiz.title,
+    };
+  });
 
   return (
     <>
@@ -42,7 +56,7 @@ export default async function editModule({ params }) {
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={LayoutDashboard} />
@@ -56,6 +70,20 @@ export default async function editModule({ params }) {
             </div>
             <div>
               <div className="flex items-center gap-x-2">
+                <IconBadge icon={Lightbulb} />
+                <h2 className="text-xl">Customize Your Quiz</h2>
+              </div>
+              <QuizForm
+                moduleId={moduleId}
+                courseId={courseId}
+                initialData={{ quizset: courseModule?.quizset?.toString() }}
+                options={quizsetOptions}
+              />
+            </div>
+          </div>
+          <div>
+            <div>
+              <div className="flex items-center gap-x-2">
                 <IconBadge icon={BookOpenCheck} />
                 <h2 className="text-xl">Manage Your Lessons</h2>
               </div>
@@ -64,17 +92,6 @@ export default async function editModule({ params }) {
                 moduleId={moduleId}
               />
             </div>
-          </div>
-          <div>
-            <div className="flex items-center gap-x-2">
-              {/* <IconBadge icon={Video} />
-              <h2 className="text-xl">Add a video</h2> */}
-            </div>
-            {/* <ChapterVideoForm
-              initialData={chapter}
-              courseId={params.courseId}
-              chapterId={params.chapterId}
-            /> */}
           </div>
         </div>
       </div>
