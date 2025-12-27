@@ -32,7 +32,7 @@ const CourseLayout = async ({ children, params }) => {
       <div className="hidden lg:flex h-full w-96 flex-col z-50">
         <CourseSidebar courseId={courseId} />
       </div>
-      <main className="pt-14 w-full h-[80vh] overflow-y-scroll">
+      <main className="pt-14 w-full h-[80vh] overflow-y-scroll no-scrollbar">
         {children}
       </main>
     </div>

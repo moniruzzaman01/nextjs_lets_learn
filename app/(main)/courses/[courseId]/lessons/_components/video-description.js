@@ -41,12 +41,48 @@ function VideoDescription() {
         </TabsList>
         <div className="pt-3">
           <TabsContent value="details">
-            <div>render markdown / quill editor preview</div>
-            <div>render attachment</div>
+            <div className=" text-sm">
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Debitis
+              tempore ut non consectetur magni rem, quos quas ab alias placeat
+              distinctio minima. Nemo similique asperiores non, id corporis cum
+              odio alias dolores facilis, suscipit et, adipisci tempora nostrum
+              optio totam quisquam deleniti distinctio quasi. Facilis iste,
+              ratione suscipit harum ipsa qui at? Inventore eum aut natus ab
+              tenetur dicta, illum sapiente, maxime voluptate eius nam
+              repellendus saepe nostrum est quia earum? Doloremque deserunt amet
+              quis veritatis molestias doloribus reprehenderit distinctio
+              provident accusamus ratione consequuntur sed placeat cupiditate
+              eligendi vero ipsam itaque illum est repudiandae voluptate
+              aspernatur, nesciunt rem? Nam enim tempora laborum modi explicabo
+              labore assumenda ut natus consectetur, voluptas quaerat dolores.
+              Autem sint vel distinctio vitae recusandae fugiat reiciendis nam
+              asperiores, fugit blanditiis, aperiam necessitatibus, tempore
+              laborum architecto cumque numquam explicabo! Magnam provident
+              eligendi tempore iste atque itaque laborum error illo sapiente
+              expedita ducimus quae sit omnis assumenda modi porro dignissimos
+              earum deserunt optio vitae, officia ipsam qui. Expedita iure rerum
+              facilis iste dignissimos dolorem vitae error ex voluptatibus, fuga
+              itaque ipsa ab esse aperiam vero aspernatur magni incidunt quaerat
+              quia! Eos molestias atque libero possimus, quo quae quia ipsa et
+              eius inventore quasi nam, at animi impedit blanditiis quod itaque,
+              mollitia omnis nulla nemo non qui adipisci dolores! Laudantium
+              eos, hic numquam vel tenetur ipsam officiis tempora quod repellat
+              natus minima cum molestias atque nihil, sit dolor pariatur odit
+              autem optio ipsum ullam dolorum reiciendis dicta. Sint, assumenda
+              voluptatum natus quam laboriosam et nostrum voluptatem harum
+              impedit eum accusamus praesentium voluptate delectus voluptatibus
+              culpa quos! Quidem a ad, adipisci sunt similique earum nihil
+              voluptatibus rerum autem fuga provident officia amet, enim
+              voluptates accusantium labore perferendis doloremque ea. Quos
+              maiores illum esse tempora saepe recusandae numquam laudantium
+              velit fugit cupiditate? Maxime temporibus quis cumque asperiores
+              quae veniam libero? Quo!
+            </div>
           </TabsContent>
           <TabsContent value="quiz">
-            <p className="mb-4">Quiz notes</p>
-            <QuizModal quizes={quizes} />
+            <div className=" flex flex-wrap justify-center gap-5">
+              <QuizModal quizes={quizes} />
+            </div>
           </TabsContent>
         </div>
       </Tabs>
