@@ -1,9 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { VideoPlayer } from "./_components/video-player";
-import { Separator } from "@/components/ui/separator";
 import VideoDescription from "./_components/video-description";
 import { getACourse } from "@/queries/course-queries";
 import { getALessonByLessonSlugAndModuleSlug } from "@/queries/lesson-queries";
+import { getQuizzesByModuleSlug } from "@/queries/quiz-queries";
 
 const Course = async ({ params, searchParams }) => {
   const { courseId } = await params;
@@ -20,6 +19,7 @@ const Course = async ({ params, searchParams }) => {
       moduleSlug
     );
   }
+  const quizset = await getQuizzesByModuleSlug(moduleSlug);
 
   return (
     <div className="flex flex-col max-w-4xl mx-auto pb-20">
@@ -37,7 +37,7 @@ const Course = async ({ params, searchParams }) => {
         )}
       </div>
       <div>
-        <VideoDescription />
+        <VideoDescription quizset={JSON.parse(JSON.stringify(quizset))} />
       </div>
     </div>
   );
