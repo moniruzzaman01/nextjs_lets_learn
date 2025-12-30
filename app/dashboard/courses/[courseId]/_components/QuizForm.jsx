@@ -1,11 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/ui/combobox";
 import {
   Form,
   FormControl,
@@ -13,37 +7,55 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Combobox } from "@/components/ui/combobox";
 import { cn } from "@/lib/utils";
-import { Pencil } from "lucide-react";
+import { Delete, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { updateACourse } from "@/app/action/course-action";
-
+import { updateAModule } from "@/app/action/module-action";
 const formSchema = z.object({
-  quizSetId: z.string().min(1),
+  quizset: z.string().min(1),
 });
 
-export default function QuizSetForm({ initialData, courseId, options }) {
+export const QuizForm = ({
+  courseId,
+  moduleId,
+  initialData,
+  options = [
+    {
+      value: "id_1",
+      label: "Quiz Set 1",
+    },
+    {
+      value: "id_2",
+      label: "Quiz Set 2",
+    },
+  ],
+}) => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((current) => !current);
+  const quizset = options.find((opt) => opt.value == initialData.quizset);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      quizSetId: initialData?.quizSetId || "",
+      quizset: initialData?.quizset || "",
     },
   });
   const { isSubmitting, isValid } = form.formState;
-  const quizset = options.find((opt) => opt.value == initialData.quizSetId);
   const onSubmit = async (values) => {
     try {
-      await updateACourse(courseId, { quizset: values.quizSetId });
-      toast.success("Quiz set added to the course");
+      await updateAModule(moduleId, values, courseId);
+      toast.success("Module updated!!!");
       toggleEdit();
       router.refresh();
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong!!!");
     }
   };
 
@@ -53,7 +65,10 @@ export default function QuizSetForm({ initialData, courseId, options }) {
         Quiz Set
         <Button variant="ghost" onClick={toggleEdit}>
           {isEditing ? (
-            <>Cancel</>
+            <>
+              <Delete />
+              Cancel
+            </>
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
@@ -66,7 +81,7 @@ export default function QuizSetForm({ initialData, courseId, options }) {
         <p
           className={cn(
             "text-sm mt-2",
-            !initialData.quizSetId && "text-slate-500 italic"
+            !initialData.quizset && "text-slate-500 italic"
           )}
         >
           {quizset ? quizset.label : "No quiz set selected"}
@@ -80,7 +95,7 @@ export default function QuizSetForm({ initialData, courseId, options }) {
           >
             <FormField
               control={form.control}
-              name="quizSetId"
+              name="quizset"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -100,4 +115,4 @@ export default function QuizSetForm({ initialData, courseId, options }) {
       )}
     </div>
   );
-}
+};

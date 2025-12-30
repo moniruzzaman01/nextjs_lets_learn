@@ -44,7 +44,7 @@ export default function Details({ course }) {
         {/* tabs start */}
         <div className="my-6">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 my-6 max-w-[768px]">
+            <TabsList className="grid w-full grid-cols-3 my-6 max-w-[768px] bg-gray-100">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
               <TabsTrigger value="instructor">Instructor</TabsTrigger>

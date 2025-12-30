@@ -78,7 +78,7 @@ export default function RelatedCourses() {
                   <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
                     <div className="relative w-full aspect-video rounded-md overflow-hidden">
                       <Image
-                        src="/assets/images/courses/course_1.png"
+                        src="https://i.ibb.co.com/39GW4q16/course.png"
                         alt={"course"}
                         className="object-cover"
                         fill

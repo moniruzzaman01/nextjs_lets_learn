@@ -7,12 +7,17 @@ import { isAlreadyEnrolled } from "@/queries/enrollment-queries";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getAUserByEmail } from "@/queries/user-queries";
+import { headers } from "next/headers";
 
 export default async function Intro({ course }) {
-  const { user } = await auth();
-  if (!user) {
-    redirect("/login");
-  }
+  const headerlist = await headers();
+  const { user } =
+    (await auth.api.getSession({
+      headers: {
+        cookie: headerlist.get("cookie") || "",
+      },
+    })) || {};
+
   const { title, subtitle, thumbnail, id, price } = course || {};
   const loggedInUser = await getAUserByEmail(user?.email);
   const isEnrolled = await isAlreadyEnrolled(id, loggedInUser?.id);
@@ -34,21 +39,33 @@ export default async function Intro({ course }) {
               </p>
 
               <div className="mt-6 flex items-center justify-center flex-wrap gap-3">
-                {isEnrolled ? (
-                  <Link href="#" className={cn(buttonVariants({ size: "lg" }))}>
-                    Continue
+                {user &&
+                  (isEnrolled ? (
+                    <Link
+                      href={`/courses/${id}/lessons`}
+                      className={cn(buttonVariants({ size: "lg" }))}
+                    >
+                      Continue
+                    </Link>
+                  ) : (
+                    <EnrollNow isButton={true} course={{ title, id, price }} />
+                  ))}
+                {!user && (
+                  <Link
+                    href="/login"
+                    className={cn(buttonVariants({ size: "lg" }))}
+                  >
+                    Login
                   </Link>
-                ) : (
-                  <EnrollNow isButton={true} course={{ title, id, price }} />
                 )}
-                <Link
+                {/* <Link
                   href="#"
                   className={cn(
                     buttonVariants({ variant: "outline", size: "lg" })
                   )}
                 >
                   See Intro
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
@@ -62,7 +79,11 @@ export default async function Intro({ course }) {
                     className="w-full rounded-lg"
                     width={768}
                     height={463}
-                    src={thumbnail}
+                    src={
+                      thumbnail
+                        ? thumbnail
+                        : "https://i.ibb.co.com/39GW4q16/course.png"
+                    }
                     alt={title}
                     unoptimized
                   />

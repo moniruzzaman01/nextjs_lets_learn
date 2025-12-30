@@ -1,13 +1,17 @@
 import { BookCheck, Clock10 } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
 import Module from "./Module";
+import { formatSecondsToHMS } from "@/lib/formatTime";
 
 export default function Curriculum({ course }) {
   const { modules } = course || {};
-  const courseDuration = course?.modules?.reduce(
-    (acc, curr) => acc + curr?.duration,
-    0
-  );
+  const courseDuration = modules
+    .map((module) => {
+      if (module?.lessonIds) {
+        return module.lessonIds.reduce((acc, curr) => acc + curr.duration, 0);
+      }
+    })
+    .reduce((acc, curr) => acc + curr, 0);
 
   return (
     <>
@@ -18,21 +22,24 @@ export default function Curriculum({ course }) {
         </span>
         <span className="flex items-center gap-1.5">
           <Clock10 className="w-4 h-4" />
-          {Math.floor(courseDuration / 60)}+ Hours
+          {formatSecondsToHMS(courseDuration)} Hours
         </span>
         {/* <span className="flex items-center gap-1.5">
           <Radio className="w-4 h-4" />4 Live Class
         </span> */}
       </div>
-      <Accordion
-        defaultValue={["item-1", "item-2", "item-3"]}
-        type="multiple"
-        collapsible="true"
-        className="w-full"
-      >
-        {modules &&
-          modules?.map((module, idx) => <Module key={idx} module={module} />)}
-      </Accordion>
+      {modules && (
+        <Accordion
+          defaultValue={modules?.map((module) => module.title)}
+          type="multiple"
+          collapsible="true"
+          className="w-full space-y-1"
+        >
+          {modules?.map((module, idx) => (
+            <Module key={idx} module={module} />
+          ))}
+        </Accordion>
+      )}
     </>
   );
 }

@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { Quizset } from "./quizset-model";
 
 const moduleSchema = new Schema({
   title: {
@@ -25,12 +26,13 @@ const moduleSchema = new Schema({
     ref: "Lesson",
     type: [Schema.ObjectId],
   },
-  duration: {
-    type: Number,
-  },
   order: {
     required: true,
     type: Number,
+  },
+  quizset: {
+    type: Schema.ObjectId,
+    ref: Quizset,
   },
 });
 

@@ -3,7 +3,7 @@ import { Assessment } from "@/models/assessment-model";
 import { Report } from "@/models/report-model";
 import { dbConnect } from "@/service/mongo";
 
-export const getAReport = async (query) => {
+export const getAReport = async (query = { course: "", student: "" }) => {
   await dbConnect();
   const report = await Report.findOne(query)
     .populate({

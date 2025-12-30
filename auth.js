@@ -3,6 +3,7 @@ import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
 const client = new MongoClient(process.env.mongodb_connection_string);
+await client.connect();
 const db = client.db();
 
 export const auth = betterAuth({
@@ -13,6 +14,7 @@ export const auth = betterAuth({
     enabled: true,
   },
   user: {
+    modelName: "users",
     additionalFields: {
       firstName: {
         type: "string",
@@ -25,6 +27,7 @@ export const auth = betterAuth({
       phone: {
         type: "string",
         required: false,
+        defaultValue: "",
       },
       role: {
         type: "string",
@@ -51,7 +54,6 @@ export const auth = betterAuth({
         required: false,
         defaultValue: "",
       },
-      // Add any other custom fields you need
     },
   },
   socialProviders: {
@@ -67,7 +69,7 @@ export const auth = betterAuth({
     // },
   },
   callbacks: {
-    signIn: (user) => {
+    signIn: async (user) => {
       return user;
     },
   },

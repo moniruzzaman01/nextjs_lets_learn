@@ -15,7 +15,7 @@ export default function Editor({ description, onChange }) {
     editorProps: {
       attributes: {
         class:
-          " border bg-white h-52 px-3 py-2 focus:outline-none focus:border-black rounded-lg",
+          " border bg-white h-52 px-3 py-2 focus:outline-none focus:border-black rounded-lg overflow-y-scroll no-scrollbar",
       },
     },
     onUpdate: ({ editor }) => {

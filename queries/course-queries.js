@@ -9,6 +9,7 @@ import { Testimonial } from "@/models/testimonial-model";
 import { User } from "@/models/user-model";
 import { getEnrollmentsByCourseId } from "./enrollment-queries";
 import { dbConnect } from "@/service/mongo";
+import { Lesson } from "@/models/lesson-model";
 
 export async function getAllCourses() {
   await dbConnect();
@@ -42,7 +43,7 @@ export async function getAllCourses() {
   return replaceMongoIdInArray(courses);
 }
 
-export async function getACourse(courseId) {
+export async function getACourse(courseId, isPublished) {
   await dbConnect();
   const courses = await Course.findById(courseId)
     .populate({
@@ -64,6 +65,13 @@ export async function getACourse(courseId) {
     .populate({
       path: "modules",
       model: Module,
+      match: isPublished ? { isPublished: true } : {},
+      populate: {
+        path: "lessonIds",
+        model: Lesson,
+        select: "duration title isPublic slug video_url",
+        match: isPublished ? { isPublished: true } : {},
+      },
     })
     .lean();
   return replaceMongoIdInObject(courses);

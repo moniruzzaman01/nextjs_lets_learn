@@ -4,6 +4,7 @@ import Details from "./_components/Details";
 import Testimonial from "./_components/Testimonial";
 import RelatedCourses from "./_components/RelatedCourses";
 import { replaceMongoIdInArray } from "@/lib/convertData";
+import { ServerToast } from "@/components/server-toast";
 
 const CourseDetailsPage = async ({ params }) => {
   const { courseId } = await params;
@@ -18,6 +19,7 @@ const CourseDetailsPage = async ({ params }) => {
         <Testimonial testimonials={replaceMongoIdInArray(testimonials)} />
       )}
       <RelatedCourses />
+      <ServerToast />
     </>
   );
 };

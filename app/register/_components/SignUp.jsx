@@ -23,11 +23,19 @@ export default function SignUp({ role }) {
     const formData = new FormData(event.currentTarget);
     const firstName = formData.get("first-name");
     const lastName = formData.get("last-name");
+    const name = firstName + " " + lastName;
     const email = formData.get("email");
     const password = formData.get("password");
     const userRole =
       role === "student" || role === "instructor" ? role : "student";
-    const userData = { firstName, lastName, email, password, role: userRole };
+    const userData = {
+      name,
+      firstName,
+      lastName,
+      email,
+      password,
+      role: userRole,
+    };
 
     try {
       const { data, error } = await authClient.signUp.email(userData);
