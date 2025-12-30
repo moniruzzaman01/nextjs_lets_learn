@@ -6,7 +6,7 @@ import QuizCard from "./QuizCard";
 import { useState } from "react";
 import NoQuizAvailable from "./NoQuizAvailable";
 
-function VideoDescription({ quizset }) {
+function VideoDescription({ quizset, moduleId, courseId }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -73,6 +73,9 @@ function VideoDescription({ quizset }) {
                     open={open}
                     setOpen={setOpen}
                     quizzes={quizset.quizIds}
+                    moduleId={moduleId}
+                    quizSetId={quizset.id}
+                    courseId={courseId}
                   />
                 </>
               ) : (

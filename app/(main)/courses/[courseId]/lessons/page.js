@@ -37,7 +37,11 @@ const Course = async ({ params, searchParams }) => {
         )}
       </div>
       <div>
-        <VideoDescription quizset={JSON.parse(JSON.stringify(quizset))} />
+        <VideoDescription
+          moduleId={selectedLesson.moduleId}
+          courseId={courseId}
+          quizset={JSON.parse(JSON.stringify(quizset))}
+        />
       </div>
     </div>
   );

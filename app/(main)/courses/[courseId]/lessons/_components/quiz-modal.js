@@ -1,17 +1,21 @@
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  MessageCircleQuestionMark,
+} from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-import {
-  ArrowLeft,
-  ArrowRight,
-  FileQuestion,
-  Info,
-  MessageCircleQuestionMark,
-} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { addQuizAssessment } from "@/app/action/quiz-action";
 
-function QuizModal({ open, setOpen, quizzes }) {
+function QuizModal({ open, setOpen, quizzes, moduleId, quizSetId, courseId }) {
+  const router = useRouter();
+  const [answers, setAnswers] = useState([]);
   const totalQuizes = quizzes?.length;
   const [quizIndex, setQuizIndex] = useState(0);
   const lastQuizIndex = totalQuizes - 1;
@@ -25,6 +29,36 @@ function QuizModal({ open, setOpen, quizzes }) {
     }
     if (type === "prev" && prevQuizIndex >= 0) {
       setQuizIndex((prev) => prev - 1);
+    }
+  };
+  const updateAnswer = (event, quizId, selected) => {
+    const isChecked = event.target.checked;
+
+    const obj = {};
+    if (isChecked) {
+      obj["option"] = selected;
+    }
+    const answer = {
+      quizId: quizId,
+      options: [obj],
+    };
+
+    const found = answers.find((item) => item.quizId === answer.quizId);
+    if (found) {
+      const filtered = answers.filter((item) => item.quizId !== answer.quizId);
+      setAnswers([...filtered, answer]);
+    } else {
+      setAnswers([...answers, answer]);
+    }
+  };
+  const handleSubmit = async () => {
+    try {
+      await addQuizAssessment(courseId, moduleId, quizSetId, answers);
+      setOpen(false);
+      router.refresh();
+      toast.success("Quiz submitted successfully!!!");
+    } catch (error) {
+      toast.error("Something went wrong!!!");
     }
   };
 
@@ -45,24 +79,28 @@ function QuizModal({ open, setOpen, quizzes }) {
               <MessageCircleQuestionMark />
               {currentQuiz.question}
             </h3>
-            <div className=" flex justify-end items-center">
+            {/* <div className=" flex justify-end items-center">
               <Info className=" h-4" />
               <span className="text-[10px] block text-end">
                 একটি প্রশ্নের একাধিক উত্তর হতে পারে & ভুল সিলেকশনে কোন নেগেটিভ
                 মার্কিং নেই
               </span>
-            </div>
+            </div> */}
           </div>
           <div className="grid md:grid-cols-2 gap-5 mb-6">
             {currentQuiz?.options.map((option) => (
               <div key={option._id}>
                 <input
-                  className="opacity-0 invisible absolute [&:checked_+_label]:bg-success/5"
-                  type="checkbox"
+                  className="opacity-0 invisible absolute [&:checked_+_label]:bg-slate-100"
+                  type="radio"
+                  name="answer"
+                  onChange={(e, _quizId, _selected) =>
+                    updateAnswer(e, currentQuiz._id, option.text)
+                  }
                   id={`option-${option._id}`}
                 />
                 <Label
-                  className="border border-border rounded px-2 py-3 block cursor-pointer hover:bg-gray-50 transition-all font-normal"
+                  className="border rounded px-2 py-3 block cursor-pointer hover:bg-gray-50 transition-all font-normal"
                   htmlFor={`option-${option._id}`}
                 >
                   {option.text}
@@ -78,13 +116,19 @@ function QuizModal({ open, setOpen, quizzes }) {
             >
               <ArrowLeft /> Previous Quiz
             </Button>
-            <Button
-              className="gap-2 rounded-3xl"
-              disabled={quizIndex >= lastQuizIndex}
-              onClick={() => quizChangeHanlder("next")}
-            >
-              Next Quiz <ArrowRight />
-            </Button>
+            {quizIndex >= lastQuizIndex ? (
+              <Button onClick={handleSubmit} className="gap-2 rounded-3xl">
+                Submit <ArrowUp />
+              </Button>
+            ) : (
+              <Button
+                className="gap-2 rounded-3xl"
+                disabled={quizIndex >= lastQuizIndex}
+                onClick={() => quizChangeHanlder("next")}
+              >
+                Next Quiz <ArrowRight />
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

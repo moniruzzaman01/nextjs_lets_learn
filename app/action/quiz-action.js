@@ -1,7 +1,13 @@
 "use server";
 
+import { auth } from "@/auth";
+import { replaceMongoIdInArray } from "@/lib/convertData";
+import { Assessment } from "@/models/assessment-model";
 import { Quiz } from "@/models/quiz-model";
 import { Quizset } from "@/models/quizset-model";
+import { getQuizzesByQuizsetId } from "@/queries/quiz-queries";
+import { headers } from "next/headers";
+import { createAssessmentReport } from "./report-action";
 
 export const addAQuizset = async (quizsetData) => {
   try {
@@ -69,6 +75,71 @@ export const deleteAQuiz = async (quizId, quizSetId) => {
       { new: true }
     );
     return quizset ? true : false;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const addQuizAssessment = async (
+  courseId,
+  moduleId,
+  quizSetId,
+  answers
+) => {
+  try {
+    const quizset = await getQuizzesByQuizsetId(quizSetId);
+    const quizzes = replaceMongoIdInArray(quizset.quizIds);
+
+    const assessmentRecord = quizzes.map((quiz) => {
+      const obj = {};
+      obj.quizId = quiz.id;
+      const found = answers.find(
+        (answer) => answer.quizId.toString() === quiz.id.toString()
+      );
+      if (found) {
+        obj.attempted = true;
+      } else {
+        obj.attempted = false;
+      }
+      const mergedOptions = quiz.options.map((option) => {
+        return {
+          option: option.text,
+          isCorrect: option.is_correct,
+          isSelected: (function () {
+            const found = answers.find(
+              (answer) => answer.options[0].option === option.text
+            );
+            if (found) {
+              return true;
+            } else {
+              return false;
+            }
+          })(),
+        };
+      });
+      obj["options"] = mergedOptions;
+      return obj;
+    });
+
+    const assessmentEntry = {};
+    assessmentEntry.assessments = assessmentRecord;
+    assessmentEntry.otherMarks = 0;
+
+    const assessment = await Assessment.create(assessmentEntry);
+
+    const headerlist = await headers();
+    const { user } =
+      (await auth.api.getSession({
+        headers: {
+          cookie: headerlist.get("cookie") || "",
+        },
+      })) || {};
+
+    await createAssessmentReport({
+      courseId: courseId,
+      userId: user.id,
+      quizAssessment: assessment?._id,
+    });
   } catch (error) {
     throw new Error(error);
   }
