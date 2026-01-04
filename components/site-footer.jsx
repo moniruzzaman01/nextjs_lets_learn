@@ -8,7 +8,7 @@ export function SiteFooter({ className }) {
         <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
           <Logo />
           <p className="text-center text-sm leading-loose md:text-left">
-            Built by{" "}
+            Built using{" "}
             <a
               href="https://ui.shadcn.com/"
               rel="noreferrer"
@@ -25,25 +25,16 @@ export function SiteFooter({ className }) {
             >
               Vercel
             </a>
-            . Illustrations by{" "}
+            . Created By{" "}
             <a
-              href="https://popsy.co"
+              href="https://github.com/moniruzzaman01"
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
             >
-              Popsy
+              Moniruzzaman
             </a>
-            . The source code is available on{" "}
-            <a
-              href="https://github.com/moniruzzaman01/nextjs_lets_learn.git"
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              GitHub
-            </a>
-            .
+            . All right reserved to Let's Learn community.
           </p>
         </div>
       </div>

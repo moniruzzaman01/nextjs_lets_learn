@@ -6,9 +6,19 @@ import CourseFilter from "./_components/CourseFilter";
 import { getAllCourses } from "@/queries/course-queries";
 import { SectionTitle } from "@/components/section-title";
 import CourseCard from "./_components/CourseCard";
+import NotFound from "@/components/not-found";
 
 const CoursesPage = async () => {
   const courses = await getAllCourses();
+  if (!courses.length)
+    return (
+      <section className="container space-y-6 dark:bg-transparent py-6 h-[70vh]">
+        <SectionTitle>All Courses</SectionTitle>
+        <div className=" flex items-center justify-center h-full">
+          <NotFound title="Courses not found!!!" />
+        </div>
+      </section>
+    );
 
   return (
     <section
