@@ -55,6 +55,7 @@ export default function LessonsForm({ initialData = [], moduleId }) {
         toast.success("Lesson created successfully!!!");
         toggleCreating();
         router.refresh();
+        form.reset();
       }
     } catch (error) {
       toast.error("Something went wrong!!!");

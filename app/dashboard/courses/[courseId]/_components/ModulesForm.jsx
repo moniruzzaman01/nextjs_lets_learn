@@ -56,6 +56,7 @@ export default function ModulesForm({ initialData = [], courseId }) {
         toast.success("Module created successfully!!!");
         toggleCreating();
         router.refresh();
+        form.reset();
       }
     } catch (error) {
       toast.error("Something went wrong!!!");
