@@ -67,6 +67,7 @@ export default async function EditCourse({ params }) {
             />
             <CourseLearningForm
               initialData={JSON.parse(JSON.stringify(course?.learning))}
+              courseId={courseId}
             />
           </div>
           <div className="space-y-6">

@@ -5,12 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PlusCircle } from "lucide-react";
+import { Delete, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { slugify } from "@/lib/convertData";
-import { postAModule } from "@/app/action/module-action";
 import {
   Form,
   FormControl,
@@ -20,40 +18,35 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import CourseLearnings from "./CourseLearnings";
+import { updateCourseLearning } from "@/app/action/course-action";
 
 const formSchema = z.object({
-  title: z.string().min(5),
+  title: z
+    .string()
+    .min(5, { message: "This should be at least 5 characters long." }),
 });
 
-export default function CourseLearningForm({ initialData = [] }) {
+export default function CourseLearningForm({ initialData = [], courseId }) {
   const [learning, setLearning] = useState(initialData);
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
   const [action, setAction] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
+
   const toggleCreating = () => setIsCreating((current) => !current);
   const form = useForm({
     resolver: zodResolver(formSchema),
+    mode: "onChange",
     defaultValues: {
       title: "",
     },
   });
   const { isSubmitting, isValid } = form.formState;
   const onSubmit = async (values) => {
-    setIsUpdating(true);
     try {
-      values["slug"] = slugify(values.title);
-      values["order"] = learning.length;
-      const response = await postAModule(values);
+      const response = await updateCourseLearning(courseId, values?.title);
       if (response) {
-        setLearning((learning) => [
-          ...learning,
-          {
-            _id: response._id,
-            ...values,
-          },
-        ]);
-        toast.success("Module created successfully!!!");
+        setLearning(response?.learning);
+        toast.success("Course learning data added successfully!!!");
         toggleCreating();
         router.refresh();
         form.reset();
@@ -61,7 +54,6 @@ export default function CourseLearningForm({ initialData = [] }) {
     } catch (error) {
       toast.error("Something went wrong!!!");
     }
-    setIsUpdating(false);
   };
 
   return (
@@ -70,7 +62,10 @@ export default function CourseLearningForm({ initialData = [] }) {
         Course Learnings
         <Button variant="ghost" onClick={toggleCreating}>
           {isCreating ? (
-            <>Cancel</>
+            <>
+              <Delete />
+              Cancel
+            </>
           ) : (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
@@ -94,7 +89,7 @@ export default function CourseLearningForm({ initialData = [] }) {
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder="e.g. 'Introduction to the course...'"
+                      placeholder="e.g. 'This course will help you to...'"
                       {...field}
                     />
                   </FormControl>
@@ -115,7 +110,7 @@ export default function CourseLearningForm({ initialData = [] }) {
               !learning?.length && "text-slate-500 italic"
             )}
           >
-            {!learning?.length && "No module"}
+            {!learning?.length && "No course learning"}
             <CourseLearnings
               learning={learning}
               setAction={setAction}
