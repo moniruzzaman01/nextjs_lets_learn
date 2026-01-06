@@ -2,7 +2,7 @@ import { BadgeX } from "lucide-react";
 
 export default function NotFound({
   title = "Data Not Found",
-  message = "The data you are searching for is available to show. Please refresh the page or let the author know about it",
+  message = "The data you are searching for is not available to show. Please refresh the page or let the author know about it.",
   Icon = BadgeX,
 }) {
   return (
