@@ -4,6 +4,7 @@
 import { Italianno } from "next/font/google";
 const italianno = Italianno({
   weight: ["400"],
+  subsets: ["latin"],
 });
 export const Logo = ({ className = "" }) => {
   return (
