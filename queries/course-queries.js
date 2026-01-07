@@ -134,3 +134,20 @@ export async function getCoursesDataByInstructorId(instructorId) {
     .lean();
   return replaceMongoIdInArray(JSON.parse(JSON.stringify(courses)));
 }
+
+export async function getCoursesByCategoryId(courseId, categoryId) {
+  try {
+    const courses = await Course.find({
+      _id: { $ne: courseId },
+      category: categoryId,
+    })
+      .populate({
+        path: "category",
+        model: Category,
+      })
+      .lean();
+    return replaceMongoIdInArray(courses);
+  } catch (error) {
+    throw new Error(error);
+  }
+}

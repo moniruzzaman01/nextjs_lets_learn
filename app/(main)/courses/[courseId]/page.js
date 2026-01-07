@@ -18,7 +18,10 @@ const CourseDetailsPage = async ({ params }) => {
       {testimonials && (
         <Testimonial testimonials={replaceMongoIdInArray(testimonials)} />
       )}
-      <RelatedCourses />
+      <RelatedCourses
+        courseId={courseId}
+        categoryId={course.category._id.toString()}
+      />
       <ServerToast />
     </>
   );
