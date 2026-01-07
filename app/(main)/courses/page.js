@@ -11,7 +11,11 @@ import { getAllCategories } from "@/queries/category-queries";
 import { slugify } from "@/lib/convertData";
 
 const CoursesPage = async ({ searchParams }) => {
-  const { categories: selectedCategories } = await searchParams;
+  const {
+    categories: selectedCategories,
+    sort,
+    searchText,
+  } = await searchParams;
   let courses = await getAllCourses();
   const categories = await getAllCategories();
 
@@ -23,6 +27,17 @@ const CoursesPage = async ({ searchParams }) => {
       if (slugifiedCategory.includes(slugify(item.category.title))) return true;
     });
   }
+  if (sort) {
+    courses = courses.sort((a, b) => {
+      if (sort == "asc") return a.price - b.price;
+      else return b.price - a.price;
+    });
+  }
+  if (searchText) {
+    courses = courses.filter((item) =>
+      item.title.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }
 
   return (
     <section className="container space-y-6   dark:bg-transparent py-6">
@@ -31,7 +46,7 @@ const CoursesPage = async ({ searchParams }) => {
         <SearchCourse />
         <div className="flex items-center justify-end gap-2 max-lg:w-full">
           <SortCourse />
-          <MobileFilter />
+          <MobileFilter categories={categories} />
         </div>
       </div>
       <div className="h-10 overflow-auto  no-scrollbar">
