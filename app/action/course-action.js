@@ -46,3 +46,16 @@ export async function deleteACourse(courseId) {
     throw new Error(error);
   }
 }
+
+export const updateCourseLearning = async (courseId, learningData) => {
+  try {
+    const insertResponse = await Course.findByIdAndUpdate(
+      courseId,
+      { $addToSet: { learning: learningData } },
+      { new: true }
+    );
+    return JSON.parse(JSON.stringify(insertResponse));
+  } catch (error) {
+    throw new Error(error);
+  }
+};

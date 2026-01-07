@@ -2,21 +2,21 @@ import { MainNav } from "@/components/main-nav";
 import { SiteFooter } from "@/components/site-footer";
 const navLinks = [
   {
-    title: "Features",
-    href: "/#features",
+    title: "Courses",
+    href: "/courses",
   },
-  {
-    title: "Pricing",
-    href: "/pricing",
-  },
-  {
-    title: "Blog",
-    href: "/blog",
-  },
-  {
-    title: "Documentation",
-    href: "/docs",
-  },
+  // {
+  //   title: "Pricing",
+  //   href: "/pricing",
+  // },
+  // {
+  //   title: "Blog",
+  //   href: "/blog",
+  // },
+  // {
+  //   title: "Documentation",
+  //   href: "/docs",
+  // },
 ];
 const MainLayout = ({ children }) => {
   return (

@@ -10,6 +10,7 @@ import ModulesForm from "./_components/ModulesForm";
 import PriceForm from "./_components/PriceForm";
 import { getACourse } from "@/queries/course-queries";
 import { getAllCategories } from "@/queries/category-queries";
+import CourseLearningForm from "./_components/CourseLearningForm";
 
 export default async function EditCourse({ params }) {
   const { courseId } = await params;
@@ -63,6 +64,10 @@ export default async function EditCourse({ params }) {
               initialData={{ category: course?.category?._id?.toString() }}
               courseId={courseId}
               options={categoryOptions}
+            />
+            <CourseLearningForm
+              initialData={JSON.parse(JSON.stringify(course?.learning))}
+              courseId={courseId}
             />
           </div>
           <div className="space-y-6">

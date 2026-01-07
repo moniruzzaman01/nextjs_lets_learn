@@ -6,14 +6,21 @@ import Image from "next/image";
 import { CircleUserRound } from "lucide-react";
 
 export default function Details({ course }) {
-  const { title, subtitle, instructor, updatedAt, description, learning } =
-    course || {};
+  const {
+    title,
+    subtitle,
+    instructor,
+    updatedAt,
+    description,
+    learning,
+    category,
+  } = course || {};
 
   return (
     <section className="py-8 md:py-12 lg:py-24">
       <div className="container">
-        <span className="bg-success px-4 py-0.5 rounded-full text-xs font-medium text-white inline-block bg-orange-500">
-          Development
+        <span className=" px-2 py-0.5 rounded-full text-xs font-medium bg-orange-500 text-white">
+          {category?.title}
         </span>
         <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold 2xl:text-5xl mt-3">
           {title}

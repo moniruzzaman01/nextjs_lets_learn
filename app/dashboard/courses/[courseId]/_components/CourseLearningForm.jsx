@@ -5,14 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { Delete, Loader2, PlusCircle } from "lucide-react";
+import { Delete, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
-import LessonList from "./LessonList";
-import { slugify } from "@/lib/convertData";
-import { postALesson, reorderLessons } from "@/app/action/lesson-action";
 import {
   Form,
   FormControl,
@@ -20,84 +16,50 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
+import CourseLearnings from "./CourseLearnings";
+import { updateCourseLearning } from "@/app/action/course-action";
 
 const formSchema = z.object({
-  title: z.string().min(5),
+  title: z
+    .string()
+    .min(5, { message: "This should be at least 5 characters long." }),
 });
 
-export default function LessonsForm({ initialData = [], moduleId }) {
-  const [lessons, setLessons] = useState(initialData);
+export default function CourseLearningForm({ initialData = [], courseId }) {
+  const [learning, setLearning] = useState(initialData);
   const router = useRouter();
   const [isCreating, setIsCreating] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [action, setAction] = useState(false);
+
   const toggleCreating = () => setIsCreating((current) => !current);
   const form = useForm({
     resolver: zodResolver(formSchema),
+    mode: "onChange",
     defaultValues: {
       title: "",
     },
   });
   const { isSubmitting, isValid } = form.formState;
   const onSubmit = async (values) => {
-    setIsUpdating(true);
     try {
-      values["slug"] = slugify(values.title);
-      values["order"] = lessons.length;
-      const response = await postALesson(values, moduleId);
+      const response = await updateCourseLearning(courseId, values?.title);
       if (response) {
-        setLessons((lessons) => [
-          ...lessons,
-          {
-            _id: response._id,
-            ...values,
-          },
-        ]);
-        toast.success("Lesson created successfully!!!");
+        setLearning(response?.learning);
+        toast.success("Course learning data added successfully!!!");
         toggleCreating();
         router.refresh();
         form.reset();
       }
     } catch (error) {
       toast.error("Something went wrong!!!");
-    } finally {
-      setIsUpdating(false);
     }
   };
-  const onReorder = async (updateData) => {
-    try {
-      setIsUpdating(true);
-      await reorderLessons(updateData);
-      const reorderedData = lessons.map((lesson) => {
-        updateData.find((item) => {
-          if (item._id == lesson._id) {
-            lesson.order = item.order;
-          }
-        });
-
-        return lesson;
-      });
-      setLessons(reorderedData);
-      toast.success("Lesson reordered!!!");
-      router.refresh();
-    } catch {
-      toast.error("Something went wrong!!!");
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-  useEffect(() => {
-    setLessons(initialData);
-  }, [initialData]);
 
   return (
     <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
-      {isUpdating && (
-        <div className="absolute h-full w-full bg-gray-500/20 top-0 right-0 rounded-md flex items-center justify-center">
-          <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
-        </div>
-      )}
       <div className="font-medium flex items-center justify-between">
-        Module Lessons
+        Course Learnings
         <Button variant="ghost" onClick={toggleCreating}>
           {isCreating ? (
             <>
@@ -107,7 +69,7 @@ export default function LessonsForm({ initialData = [], moduleId }) {
           ) : (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
-              Add a lesson
+              Add a learning
             </>
           )}
         </Button>
@@ -127,7 +89,7 @@ export default function LessonsForm({ initialData = [], moduleId }) {
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder="e.g. 'Introduction to the course...'"
+                      placeholder="e.g. 'This course will help you to...'"
                       {...field}
                     />
                   </FormControl>
@@ -145,15 +107,16 @@ export default function LessonsForm({ initialData = [], moduleId }) {
           <div
             className={cn(
               "text-sm mt-2",
-              !lessons?.length && "text-slate-500 italic"
+              !learning?.length && "text-slate-500 italic"
             )}
           >
-            {!lessons?.length && "No module"}
-            <LessonList onReorder={onReorder} items={lessons || []} />
+            {!learning?.length && "No course learning"}
+            <CourseLearnings
+              learning={learning}
+              setAction={setAction}
+              action={action}
+            />
           </div>
-          <p className="text-xs text-muted-foreground mt-4">
-            Drag & Drop to reorder the lessons
-          </p>
         </>
       )}
     </div>

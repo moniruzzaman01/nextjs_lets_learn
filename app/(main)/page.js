@@ -7,6 +7,7 @@ import { ArrowRightIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import CourseCard from "./courses/_components/CourseCard";
+import NotFound from "@/components/not-found";
 
 const HomePage = async () => {
   const categories = await getAllCategories();
@@ -39,7 +40,10 @@ const HomePage = async () => {
             way.”
           </p>
           <div className="flex items-center gap-3 flex-wrap justify-center">
-            <Link href="" className={cn(buttonVariants({ size: "lg" }))}>
+            <Link
+              href="/courses"
+              className={cn(buttonVariants({ size: "lg" }))}
+            >
               Explore Now
             </Link>
             <Link
@@ -52,10 +56,7 @@ const HomePage = async () => {
         </div>
       </section>
       {/* Categories Section */}
-      <section
-        id="categories"
-        className="container space-y-6  py-8  md:py-12 lg:py-24"
-      >
+      <section className="container space-y-6  py-8  md:py-12 lg:py-24">
         <div className="flex items-center justify-between">
           <SectionTitle>Categories</SectionTitle>
 
@@ -66,30 +67,34 @@ const HomePage = async () => {
             Browse All <ArrowRightIcon className="h-4 w-4" />
           </Link>
         </div>
-        <div className="mx-auto grid justify-center gap-4 grid-cols-2  md:grid-cols-3 2xl:grid-cols-4">
-          {categories.map((category) => {
-            return (
-              <Link
-                href={`/categories/${category?.id}`}
-                key={category.id}
-                className="relative overflow-hidden rounded-lg border bg-background p-2 hover:scale-105 transition-all duration-500 ease-in-out"
-              >
-                <div className="flex  flex-col gap-4 items-center justify-between rounded-md p-6">
-                  <Image
-                    src={category.thumbnail}
-                    alt={category.title}
-                    width={100}
-                    height={100}
-                  />
-                  <h3 className="font-bold">{category.title}</h3>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        {categories.length ? (
+          <div className="mx-auto grid justify-center gap-4 grid-cols-2  md:grid-cols-3 2xl:grid-cols-4">
+            {categories.map((category) => {
+              return (
+                <Link
+                  href={`/categories/${category?.id}`}
+                  key={category.id}
+                  className="relative overflow-hidden rounded-lg border bg-background p-2 hover:scale-105 transition-all duration-500 ease-in-out"
+                >
+                  <div className="flex  flex-col gap-4 items-center justify-between rounded-md p-6">
+                    <Image
+                      src={category.thumbnail}
+                      alt={category.title}
+                      width={100}
+                      height={100}
+                    />
+                    <h3 className="font-bold">{category.title}</h3>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <NotFound title="Categories not found!!!" />
+        )}
       </section>
       {/* Courses Section */}
-      <section id="courses" className="container space-y-6   md:py-12 lg:py-24">
+      <section className="container space-y-6 md:py-12 lg:py-24">
         <div className="flex items-center justify-between">
           <SectionTitle>Courses</SectionTitle>
           <Link
@@ -99,11 +104,15 @@ const HomePage = async () => {
             Browse All <ArrowRightIcon className="h-4 w-4" />
           </Link>
         </div>
-        <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
-          {courses.map((course) => {
-            return <CourseCard key={course?.id} course={course} />;
-          })}
-        </div>
+        {courses.length ? (
+          <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
+            {courses.map((course) => {
+              return <CourseCard key={course?.id} course={course} />;
+            })}
+          </div>
+        ) : (
+          <NotFound title="Courses not found!!!" />
+        )}
       </section>
     </>
   );

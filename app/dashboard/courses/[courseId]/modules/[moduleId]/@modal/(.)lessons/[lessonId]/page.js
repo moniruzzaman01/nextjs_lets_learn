@@ -1,7 +1,7 @@
 "use client";
 
 import IconBadge from "@/components/icon-badge";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, LoaderCircle } from "lucide-react";
 import { Eye } from "lucide-react";
 import { Video } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
@@ -39,7 +39,13 @@ export default function EditLessonModal() {
     };
   }, [router]);
 
-  if (!lesson) return <>Loading....</>;
+  if (!lesson)
+    return (
+      <>
+        <div className=" bg-slate-200 absolute top-0 left-0 h-screen w-screen opacity-50"></div>
+        <LoaderCircle className=" absolute left-[48%]  top-[48%] z-50 animate-spin duration-1000" />
+      </>
+    );
 
   return (
     <div className=" bg-zinc-500 w-screen h-screen fixed top-0 left-0 z-50 bg-opacity-50 flex items-center">

@@ -40,13 +40,13 @@ export function MainNav({ items }) {
           <Logo />
         </Link>
         {items?.length ? (
-          <nav className="hidden gap-6 lg:flex">
+          <nav className="hidden gap-2 lg:flex">
             {items?.map((item, index) => (
               <Link
                 key={index}
-                href={item.disabled ? "#" : item.href}
+                href={item.href}
                 className={cn(
-                  "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm"
+                  "flex items-center font-medium sm:text-sm text-slate-700 hover:text-slate-500 h-8 my-auto px-3"
                 )}
               >
                 {item.title}
